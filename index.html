@@ -8,50 +8,82 @@
 <style>
   @import url('https://fonts.googleapis.com/css2?family=Spectral:wght@400;600&family=Inter:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500;600&display=swap');
   * { box-sizing: border-box; }
-  body { margin:0; background:#EDEEF0; color:#1B2127; font-family:'Inter',sans-serif; }
+  body { margin:0; background:#EFEDF3; color:#211F29; font-family:'Inter',sans-serif; }
   .display { font-family:'Spectral',serif; }
   .mono { font-family:'IBM Plex Mono',monospace; }
-  header { border-bottom:1px solid #D3D7DA; padding:16px 20px; }
+  header { border-bottom:1px solid #DCD7E6; padding:16px 20px; }
   header .row { display:flex; justify-content:space-between; align-items:baseline; }
   header h1 { font-size:22px; margin:0; letter-spacing:0.03em; }
-  header p { margin:4px 0 0; color:#5B6268; font-size:12px; }
-  .badge { font-size:11px; color:#0E9E76; border:1px solid rgba(14,158,118,0.4); padding:3px 8px; border-radius:4px; }
+  header p { margin:4px 0 0; color:#6B6575; font-size:12px; }
+  .badge { font-size:11px; color:#8B7FC7; border:1px solid rgba(139,127,199,0.4); padding:3px 8px; border-radius:4px; }
   svg.trace { width:100%; height:28px; margin-top:8px; }
-  .grid { display:grid; grid-template-columns:1fr; gap:1px; background:#D3D7DA; }
+  .grid { display:grid; grid-template-columns:1fr; gap:1px; background:#DCD7E6; }
   @media (min-width:1024px) { .grid { grid-template-columns:3fr 5fr 4fr; } }
-  .panel { background:#EDEEF0; padding:16px; }
+  .panel { background:#EFEDF3; padding:16px; }
   .panel h2 { font-size:17px; margin:0 0 8px; }
-  .hint { color:#5B6268; font-size:11px; margin:0 0 12px; }
-  .const-btn { width:100%; text-align:left; background:#F7F8F9; border:1px solid #E1E4E6; border-radius:6px; padding:8px 12px; margin-bottom:6px; color:inherit; cursor:pointer; }
-  .const-btn:hover { background:#EAECEE; }
+  .hint { color:#6B6575; font-size:11px; margin:0 0 12px; }
+  .const-btn { width:100%; text-align:left; background:#F8F7FB; border:1px solid #E6E1EF; border-radius:6px; padding:8px 12px; margin-bottom:6px; color:inherit; cursor:pointer; }
+  .const-btn:hover { background:#EDE9F5; }
   .const-top { display:flex; justify-content:space-between; align-items:baseline; }
-  .const-sym { color:#0E9E76; font-size:14px; }
-  .const-unit { color:#5B6268; font-size:11px; }
-  .const-name { color:#4A5054; font-size:12px; }
-  .const-val { color:#B5720E; font-size:11px; }
+  .const-sym { color:#8B7FC7; font-size:14px; }
+  .const-unit { color:#6B6575; font-size:11px; }
+  .const-name { color:#4B4656; font-size:12px; }
+  .const-val { color:#6B5B95; font-size:11px; }
   input[type=text], input[type=number], select {
-    width:100%; background:#F7F8F9; border:1px solid #D3D7DA; border-radius:6px;
-    padding:8px 12px; color:#1B2127; font-size:14px; outline:none;
+    width:100%; background:#F8F7FB; border:1px solid #DCD7E6; border-radius:6px;
+    padding:8px 12px; color:#211F29; font-size:14px; outline:none;
   }
-  input:focus, select:focus { border-color:#0E9E76; }
+  input:focus, select:focus { border-color:#8B7FC7; }
   .btn { font-family:'IBM Plex Mono',monospace; font-size:12px; border:none; border-radius:6px; padding:8px 14px; cursor:pointer; margin-top:8px; }
-  .btn-primary { background:#0E9E76; color:#F7F8F9; }
-  .btn-warn { background:#B5720E; color:#F7F8F9; }
-  .readout { margin-top:12px; background:#F7F8F9; border:1px solid #D3D7DA; border-radius:6px; padding:12px; font-size:17px; color:#0E9E76; }
+  .btn-primary { background:#8B7FC7; color:#F8F7FB; }
+  .btn-warn { background:#6B5B95; color:#F8F7FB; }
+  .readout { margin-top:12px; background:#F8F7FB; border:1px solid #DCD7E6; border-radius:6px; padding:12px; font-size:17px; color:#8B7FC7; }
   .readout.err { color:#C1432A; font-size:14px; }
   .row2 { display:flex; gap:8px; margin:8px 0; }
   .row2 input { width:50%; }
   .row3 { display:flex; gap:8px; margin:8px 0; }
   .row3 input { width:33%; }
-  #canvasWrap, .simCanvasWrap { height:240px; margin-top:12px; background:#F7F8F9; border:1px solid #D3D7DA; border-radius:6px; padding:6px; }
+  #canvasWrap, .simCanvasWrap { height:240px; margin-top:12px; background:#F8F7FB; border:1px solid #DCD7E6; border-radius:6px; padding:6px; }
   canvas { width:100%; height:100%; display:block; }
-  .field-label { font-size:11px; color:#5B6268; margin:10px 0 4px; }
-  .stat-line { font-size:12px; color:#4A5054; margin-top:8px; }
-  .stat-line b { color:#0E9E76; }
-  .note { font-size:11px; color:#5B6268; margin-top:8px; line-height:1.5; }
-  .legend { display:flex; gap:14px; font-size:11px; margin-top:6px; color:#4A5054; }
+  .field-label { font-size:11px; color:#6B6575; margin:10px 0 4px; }
+  .stat-line { font-size:12px; color:#4B4656; margin-top:8px; }
+  .stat-line b { color:#8B7FC7; }
+  .note { font-size:11px; color:#6B6575; margin-top:8px; line-height:1.5; }
+  .legend { display:flex; gap:14px; font-size:11px; margin-top:6px; color:#4B4656; }
   .legend span { display:inline-flex; align-items:center; gap:4px; }
   .dot { width:8px; height:8px; border-radius:50%; display:inline-block; }
+  .full-panel { background:#EFEDF3; padding:16px; border-top:1px solid #DCD7E6; }
+  .ptable-wrap { overflow-x:auto; margin-top:12px; padding-bottom:8px; }
+  .ptable { display:grid; grid-template-columns: repeat(18, 46px); grid-auto-rows: 46px; gap:2px; width:max-content; }
+  .pt-cell { border-radius:4px; padding:3px 4px; cursor:pointer; color:#F8F7FB; display:flex; flex-direction:column; justify-content:space-between; border:none; text-align:left; font-family:inherit; }
+  .pt-cell .pt-num { font-size:8px; opacity:0.85; }
+  .pt-cell .pt-sym { font-size:13px; font-weight:600; font-family:'IBM Plex Mono',monospace; }
+  .cat-alkalimetall { background:#B08BD9; }
+  .cat-erdalkalimetall { background:#9C8FD4; }
+  .cat-uebergangsmetall { background:#8B7FC7; }
+  .cat-metall { background:#A79BD1; }
+  .cat-halbmetall { background:#C9A4D0; }
+  .cat-nichtmetall { background:#7FA8C7; }
+  .cat-halogen { background:#D98BB0; }
+  .cat-edelgas { background:#6B5B95; }
+  .cat-lanthanoid { background:#B98BC7; }
+  .cat-actinoid { background:#9B6B95; }
+  .cat-unbekannt { background:#ABA5B8; }
+  .pt-legend { display:flex; flex-wrap:wrap; gap:10px; font-size:11px; margin-top:10px; color:#4B4656; }
+  .pt-legend span { display:inline-flex; align-items:center; gap:4px; }
+  .pt-legend .dot { width:10px; height:10px; border-radius:3px; }
+  .pt-detail { margin-top:12px; background:#F8F7FB; border:1px solid #DCD7E6; border-radius:6px; padding:12px; }
+  .pt-detail-row { display:flex; justify-content:space-between; font-size:12px; margin:3px 0; color:#4B4656; }
+  .pt-detail-row b { color:#211F29; }
+  .concept-card { background:#F8F7FB; border:1px solid #E6E1EF; border-radius:6px; padding:8px 12px; margin-bottom:6px; }
+  .concept-card .const-top { display:flex; justify-content:space-between; align-items:baseline; }
+  .concept-formula { color:#6B5B95; font-size:13px; margin:4px 0; }
+  .curve-controls { display:flex; gap:8px; align-items:flex-end; margin-bottom:8px; }
+  .curve-controls > div { flex:1; }
+  .sci-tabs { display:flex; gap:8px; margin-bottom:10px; }
+  .sci-tab { flex:1; }
+  .sci-result-card { background:#F8F7FB; border:1px solid #E6E1EF; border-radius:6px; padding:8px 12px; margin-bottom:6px; }
+  .sci-result-card a { color:#6B5B95; }
 </style>
 </head>
 <body>
@@ -65,7 +97,7 @@
     <span class="badge mono">Δ live</span>
   </div>
   <svg class="trace" viewBox="0 0 400 40" preserveAspectRatio="none">
-    <polyline points="0,20 30,20 40,4 55,36 70,20 100,20 115,10 130,30 145,20 400,20" fill="none" stroke="#0E9E76" stroke-width="1.5" opacity="0.8" />
+    <polyline points="0,20 30,20 40,4 55,36 70,20 100,20 115,10 130,30 145,20 400,20" fill="none" stroke="#8B7FC7" stroke-width="1.5" opacity="0.8" />
   </svg>
 </header>
 
@@ -83,9 +115,10 @@
     <button class="btn btn-primary" id="evalBtn">Auswerten</button>
     <div class="readout mono" id="result">—</div>
 
-    <h2 class="display" style="margin-top:24px;">Quantengravitation / ART</h2>
-    <p class="hint mono">status pro formel: etabliert · semiklassisch · unbestätigte kandidatentheorie</p>
-    <div id="qgTemplates"></div>
+    <h2 class="display" style="margin-top:24px;">Formelsammlung</h2>
+    <p class="hint mono">kategorie wählen · status pro formel: etabliert · semiklassisch · unbestätigte kandidatentheorie</p>
+    <select id="formulaCatSelect"></select>
+    <div id="formulaTemplates" style="margin-top:8px;"></div>
 
     <h2 class="display" style="margin-top:24px;">Funktionsplot f(x)</h2>
     <input type="text" id="plotInput" class="mono" value="sin(x) * exp(-x/10)" />
@@ -115,6 +148,58 @@
     <div class="note" id="expNote"></div>
   </div>
 
+</div>
+
+<div class="full-panel">
+  <h2 class="display">Periodensystem der Elemente</h2>
+  <p class="hint mono">antippen zeigt Details · horizontal scrollbar auf schmalen Bildschirmen</p>
+  <div class="ptable-wrap"><div class="ptable" id="ptable"></div></div>
+  <div class="pt-legend" id="ptLegend"></div>
+  <div class="pt-detail mono" id="ptDetail">— Element antippen für Details —</div>
+</div>
+
+<div class="full-panel">
+  <h2 class="display">7-Tage-Lernplan: Fundament der theoretischen Physik</h2>
+  <p class="hint mono">Ziel: die Symbole verstehen, keine Aufgaben rechnen — Tag für Tag</p>
+  <select id="lernplanDaySelect"></select>
+  <p class="note" id="lernplanIntro"></p>
+  <div id="lernplanConcepts"></div>
+</div>
+
+<div class="full-panel">
+  <h2 class="display">Raumzeit-Krümmung</h2>
+  <p class="hint mono">Flamm-Einbettungsdiagramm der Schwarzschild-Metrik (reale ART-Formel, kein Simulationswert erfunden)</p>
+  <div class="curve-controls">
+    <div>
+      <div class="field-label mono">Masse M (kg)</div>
+      <input type="text" id="curvatureMass" class="mono" value="1.989e30" />
+    </div>
+    <button class="btn btn-primary" id="curvatureBtn">Krümmung berechnen</button>
+  </div>
+  <div class="readout err mono" id="curvatureError" style="display:none;"></div>
+  <div class="simCanvasWrap"><canvas id="curvatureCanvas"></canvas></div>
+  <div class="stat-line" id="curvatureStats"></div>
+</div>
+
+<div class="full-panel">
+  <h2 class="display">Aktuelle Wissenschaft</h2>
+  <p class="hint mono">echte Live-Suche · keine erfundenen Ergebnisse</p>
+  <div class="sci-tabs">
+    <button class="btn btn-primary sci-tab" id="sciTabArxiv">arXiv-Suche</button>
+    <button class="btn btn-warn sci-tab" id="sciTabWiki">Wikipedia</button>
+  </div>
+  <div id="sciArxivPanel">
+    <input type="text" id="arxivQuery" class="mono" placeholder="z.B. black hole entropy" />
+    <button class="btn btn-primary" id="arxivSearchBtn">arXiv durchsuchen</button>
+    <div class="readout err mono" id="arxivError" style="display:none;"></div>
+    <div id="arxivResults" style="margin-top:8px;"></div>
+  </div>
+  <div id="sciWikiPanel" style="display:none;">
+    <input type="text" id="wikiQuery" class="mono" placeholder="z.B. Photoeffekt" />
+    <button class="btn btn-warn" id="wikiSearchBtn">Wikipedia durchsuchen</button>
+    <div class="readout err mono" id="wikiError" style="display:none;"></div>
+    <div id="wikiResult" style="margin-top:8px;"></div>
+  </div>
 </div>
 
 <script>
@@ -175,65 +260,246 @@ function evaluate() {
 document.getElementById('evalBtn').onclick = evaluate;
 formulaInput.addEventListener('keydown', e => { if (e.key === 'Enter') evaluate(); });
 
-// ---------- QG / GR formula templates ----------
-const QG_TEMPLATES = [
-  {
-    label: "Schwarzschild-Radius",
-    status: "etabliert",
-    color: "#0E9E76",
-    formula: "M = 1.989e30; 2*G*M/c^2",
-    info: "exakte Lösung der Einstein-Feldgleichungen für sphärische, ungeladene Masse (M in kg, hier Sonnenmasse als Beispiel)"
-  },
-  {
-    label: "Hawking-Temperatur",
-    status: "semiklassisch",
-    color: "#B5720E",
-    formula: "M = 1.989e30; hbar*c^3 / (8*pi*G*M*kB)",
-    info: "Quantenfeldtheorie auf gekrümmter Raumzeit (nicht volle Quantengravitation), theoretisch hergeleitet, bislang nicht direkt gemessen"
-  },
-  {
-    label: "Bekenstein-Hawking-Entropie",
-    status: "semiklassisch",
-    color: "#B5720E",
-    formula: "M = 1.989e30; A = 4*pi*(2*G*M/c^2)^2; kB*c^3*A / (4*G*hbar)",
-    info: "verknüpft Schwarzes-Loch-Fläche mit Entropie; zentraler Hinweis auf Quantengravitation, aber selbst nicht deren vollständige Theorie"
-  },
-  {
-    label: "Planck-Länge",
-    status: "etabliert",
-    color: "#0E9E76",
-    formula: "sqrt(hbar*G/c^3)",
-    info: "Skala, ab der Quanteneffekte der Raumzeit erwartet werden – Definition ist gesichert, was dort physikalisch passiert nicht"
-  },
-  {
-    label: "Krümmungsskalar (Friedmann, flach)",
-    status: "etabliert",
-    color: "#0E9E76",
-    formula: "H0 = 2.2e-18; rho_c = 3*H0^2 / (8*pi*G); rho_c",
-    info: "kritische Dichte aus den Friedmann-Gleichungen (Einsteins Feldgleichungen für homogenes Universum), H0 als Beispielwert in 1/s"
-  },
-  {
-    label: "LQG Flächenquantisierung",
-    status: "unbestätigte Kandidatentheorie",
-    color: "#5B6268",
-    formula: "gamma = 0.2375; j = 1; 8*pi*gamma*lP^2*sqrt(j*(j+1))",
-    info: "Loop Quantum Gravity sagt diskrete Flächenspektren voraus; Immirzi-Parameter γ ist nicht unabhängig hergeleitet, sondern an Bekenstein-Hawking angepasst. Nicht experimentell bestätigt."
-  },
-];
+// ---------- Formula categories ----------
+const COLOR_ETABLIERT = "#8B7FC7";
+const COLOR_SEMIKLASSISCH = "#6B5B95";
+const COLOR_KANDIDAT = "#6B6575";
 
-const qgTemplatesDiv = document.getElementById('qgTemplates');
-QG_TEMPLATES.forEach(t => {
-  const btn = document.createElement('button');
-  btn.className = 'const-btn';
-  btn.innerHTML = `<div class="const-top"><span class="const-sym mono" style="color:${t.color}">${t.label}</span>
-    <span class="const-unit mono" style="color:${t.color}">${t.status}</span></div>
-    <div class="const-name">${t.info}</div>`;
-  btn.onclick = () => {
-    formulaInput.value = t.formula;
-    evaluate();
-  };
-  qgTemplatesDiv.appendChild(btn);
+const FORMULA_CATEGORIES = {
+  mechanik: {
+    label: "Mechanik",
+    items: [
+      { label: "Kinetische Energie", status: "etabliert", color: COLOR_ETABLIERT,
+        formula: "m=2; v=3; 0.5*m*v^2",
+        info: "E = ½mv² — Bewegungsenergie eines Körpers der Masse m bei Geschwindigkeit v" },
+      { label: "Newtons Gravitationskraft", status: "etabliert", color: COLOR_ETABLIERT,
+        formula: "m1=5.97e24; m2=1; r=6.371e6; G*m1*m2/r^2",
+        info: "F = Gm₁m₂/r² — Anziehungskraft zwischen zwei Massen (Beispiel: 1kg an der Erdoberfläche)" },
+      { label: "Fallzeit aus Höhe", status: "etabliert", color: COLOR_ETABLIERT,
+        formula: "h=10; g=9.81; sqrt(2*h/g)",
+        info: "t = √(2h/g) — Fallzeit im freien Fall ohne Luftwiderstand" },
+      { label: "Federenergie", status: "etabliert", color: COLOR_ETABLIERT,
+        formula: "k=200; x=0.1; 0.5*k*x^2",
+        info: "E = ½kx² — im Hookeschen Gesetz gespeicherte potentielle Energie" },
+    ]
+  },
+  elektrodynamik: {
+    label: "Elektrodynamik",
+    items: [
+      { label: "Coulomb-Kraft", status: "etabliert", color: COLOR_ETABLIERT,
+        formula: "q1=1.6e-19; q2=1.6e-19; r=1e-10; q1*q2/(4*pi*eps0*r^2)",
+        info: "F = q₁q₂/(4πε₀r²) — Kraft zwischen zwei Punktladungen" },
+      { label: "Kondensatorenergie", status: "etabliert", color: COLOR_ETABLIERT,
+        formula: "C=1e-6; U=12; 0.5*C*U^2",
+        info: "E = ½CU² — in einem geladenen Kondensator gespeicherte Energie" },
+      { label: "Ohmsche Leistung", status: "etabliert", color: COLOR_ETABLIERT,
+        formula: "U=230; R=100; U^2/R",
+        info: "P = U²/R — elektrische Leistung an einem ohmschen Widerstand" },
+      { label: "Lorentzkraft", status: "etabliert", color: COLOR_ETABLIERT,
+        formula: "q=1.6e-19; v=1e6; B=0.5; q*v*B",
+        info: "F = qvB — Kraft auf eine bewegte Ladung im Magnetfeld" },
+    ]
+  },
+  thermodynamik: {
+    label: "Thermodynamik",
+    items: [
+      { label: "Ideales Gasgesetz (Druck)", status: "etabliert", color: COLOR_ETABLIERT,
+        formula: "R=NA*kB; n=1; T=300; V=0.0224; n*R*T/V",
+        info: "p = nRT/V — Zustandsgleichung des idealen Gases (R aus NA·kB berechnet)" },
+      { label: "Stefan-Boltzmann-Strahlungsleistung", status: "etabliert", color: COLOR_ETABLIERT,
+        formula: "A=1; T=300; sigma*A*T^4",
+        info: "P = σAT⁴ — abgestrahlte Leistung eines Schwarzen Körpers" },
+      { label: "Carnot-Wirkungsgrad", status: "etabliert", color: COLOR_ETABLIERT,
+        formula: "Tk=300; Tw=600; 1-Tk/Tw",
+        info: "η = 1 − T_kalt/T_warm — maximal möglicher Wirkungsgrad einer Wärmekraftmaschine" },
+    ]
+  },
+  optik: {
+    label: "Optik & Wellen",
+    items: [
+      { label: "Photonenenergie", status: "etabliert", color: COLOR_ETABLIERT,
+        formula: "f=5e14; h*f",
+        info: "E = hf — Energie eines Photons der Frequenz f" },
+      { label: "de-Broglie-Wellenlänge", status: "etabliert", color: COLOR_ETABLIERT,
+        formula: "m=9.11e-31; v=1e6; h/(m*v)",
+        info: "λ = h/(mv) — Materiewellenlänge eines bewegten Teilchens" },
+      { label: "Beugungsgitter-Winkel", status: "etabliert", color: COLOR_ETABLIERT,
+        formula: "m=1; lambda=633e-9; d=1e-6; asin(m*lambda/d)*180/pi",
+        info: "sinθ = mλ/d — Beugungswinkel am optischen Gitter (Ergebnis in Grad)" },
+      { label: "Snelliussches Brechungsgesetz", status: "etabliert", color: COLOR_ETABLIERT,
+        formula: "n1=1; n2=1.5; theta1=30*pi/180; asin(n1*sin(theta1)/n2)*180/pi",
+        info: "n₁sinθ₁ = n₂sinθ₂ — Brechungswinkel beim Übergang zwischen Medien (Ergebnis in Grad)" },
+      { label: "Linsengleichung", status: "etabliert", color: COLOR_ETABLIERT,
+        formula: "g=0.3; b=0.15; 1/(1/g+1/b)",
+        info: "1/f = 1/g + 1/b — Brennweite aus Gegenstands- und Bildweite" },
+      { label: "Relativistischer Dopplereffekt (Licht)", status: "etabliert", color: COLOR_ETABLIERT,
+        formula: "f=5e14; v=0.1*c; beta=v/c; f*sqrt((1-beta)/(1+beta))",
+        info: "f' = f√((1−β)/(1+β)) — Frequenzverschiebung bei relativistischer Relativbewegung" },
+      { label: "Brewster-Winkel", status: "etabliert", color: COLOR_ETABLIERT,
+        formula: "n1=1; n2=1.5; atan(n2/n1)*180/pi",
+        info: "θ_B = atan(n₂/n₁) — Einfallswinkel, bei dem reflektiertes Licht vollständig polarisiert ist (Ergebnis in Grad)" },
+    ]
+  },
+  atomphysik: {
+    label: "Atom- & Quantenphysik",
+    items: [
+      { label: "Bohr-Radius", status: "etabliert", color: COLOR_ETABLIERT,
+        formula: "4*pi*eps0*hbar^2/(me*e^2)",
+        info: "a₀ = 4πε₀ħ²/(mₑe²) — Radius der 1. Bohrschen Bahn im Wasserstoffatom" },
+      { label: "Photoeffekt (kinetische Energie)", status: "etabliert", color: COLOR_ETABLIERT,
+        formula: "f=8e14; W=4e-19; h*f-W",
+        info: "E_kin = hf − W — kinetische Energie ausgelöster Elektronen minus Austrittsarbeit W" },
+      { label: "Compton-Wellenlängenverschiebung", status: "etabliert", color: COLOR_ETABLIERT,
+        formula: "theta=pi/2; (h/(me*c))*(1-cos(theta))",
+        info: "Δλ = (h/mₑc)(1−cosθ) — Wellenlängenverschiebung bei der Comptonstreuung" },
+    ]
+  },
+  chemie: {
+    label: "Chemie-Grundlagen",
+    items: [
+      { label: "Stoffmenge", status: "etabliert", color: COLOR_ETABLIERT,
+        formula: "m=0.036; M=0.018; m/M",
+        info: "n = m/M — Stoffmenge aus Masse und molarer Masse (Beispiel: Wasser)" },
+      { label: "Molare Masse aus Teilchenzahl", status: "etabliert", color: COLOR_ETABLIERT,
+        formula: "m=0.012; N=6.02214076e23; m*NA/N",
+        info: "M = m·NA/N — molare Masse aus Gesamtmasse und Teilchenzahl (Beispiel: 1 mol Kohlenstoff)" },
+      { label: "Stoffmengenkonzentration", status: "etabliert", color: COLOR_ETABLIERT,
+        formula: "n=0.5; V=0.001; n/V",
+        info: "c = n/V — Stoffmengenkonzentration einer Lösung" },
+      { label: "Ideales Gasgesetz (Chemie)", status: "etabliert", color: COLOR_ETABLIERT,
+        formula: "R=NA*kB; n=1; T=273.15; V=0.022414; n*R*T/V",
+        info: "pV = nRT — Normbedingungen liefern ≈101325 Pa als Sanity-Check" },
+    ]
+  },
+  kernphysik: {
+    label: "Kern- & Teilchenphysik",
+    items: [
+      { label: "Massendefekt/Bindungsenergie", status: "etabliert", color: COLOR_ETABLIERT,
+        formula: "dm=1e-29; dm*c^2",
+        info: "E = Δm·c² — Bindungsenergie aus dem Massendefekt Δm" },
+      { label: "Zerfallsgesetz", status: "etabliert", color: COLOR_ETABLIERT,
+        formula: "N0=1000; lambda=0.1; t=5; N0*exp(-lambda*t)",
+        info: "N(t) = N₀e^(−λt) — Anzahl verbleibender Kerne nach Zeit t" },
+      { label: "Halbwertszeit aus Zerfallskonstante", status: "etabliert", color: COLOR_ETABLIERT,
+        formula: "lambda=0.1; log(2)/lambda",
+        info: "T½ = ln(2)/λ — Halbwertszeit eines radioaktiven Zerfalls" },
+      { label: "Reichweite α-Strahlung (Geiger-Regel)", status: "etabliert", color: COLOR_ETABLIERT,
+        formula: "E=5; 0.318*E^1.5",
+        info: "R(cm) ≈ 0,318·E^1,5 — empirische Reichweite von α-Teilchen in Luft, E in MeV" },
+    ]
+  },
+  astrophysik: {
+    label: "Astrophysik & Kosmologie",
+    items: [
+      { label: "Hubble-Gesetz", status: "etabliert", color: COLOR_ETABLIERT,
+        formula: "H0=2.2e-18; d=3.086e22; H0*d",
+        info: "v = H₀d — Fluchtgeschwindigkeit einer Galaxie aus der Hubble-Konstante (d ≈ 1 Mpc)" },
+      { label: "Fluchtgeschwindigkeit", status: "etabliert", color: COLOR_ETABLIERT,
+        formula: "M=5.972e24; r=6.371e6; sqrt(2*G*M/r)",
+        info: "v = √(2GM/r) — Fluchtgeschwindigkeit (Beispiel: Erde, ≈11,2 km/s als Sanity-Check)" },
+      { label: "3. Keplersches Gesetz", status: "etabliert", color: COLOR_ETABLIERT,
+        formula: "a=1.496e11; M=1.989e30; sqrt(4*pi^2*a^3/(G*M))",
+        info: "T = √(4π²a³/GM) — Umlaufzeit (Beispiel: Erdbahn, ≈1 Jahr als Sanity-Check)" },
+      { label: "Kosmologische Rotverschiebung", status: "etabliert", color: COLOR_ETABLIERT,
+        formula: "dlambda=10e-9; lambda=500e-9; z=dlambda/lambda; z*c",
+        info: "z = Δλ/λ, v ≈ zc — Fluchtgeschwindigkeit aus der Rotverschiebung (kleine z)" },
+    ]
+  },
+  relativitaet: {
+    label: "Einsteins Theorie",
+    items: [
+      { label: "Masse-Energie-Äquivalenz", status: "etabliert", color: COLOR_ETABLIERT,
+        formula: "m=1; m*c^2",
+        info: "E = mc² — Spezielle Relativität: Äquivalenz von Masse und Energie" },
+      { label: "Lorentzfaktor", status: "etabliert", color: COLOR_ETABLIERT,
+        formula: "v=0.8*c; 1/sqrt(1-v^2/c^2)",
+        info: "γ = 1/√(1−v²/c²) — Spezielle Relativität: Lorentzfaktor bei v=0,8c" },
+      { label: "Zeitdilatation", status: "etabliert", color: COLOR_ETABLIERT,
+        formula: "v=0.8*c; dt=1; dt/sqrt(1-v^2/c^2)",
+        info: "Δt' = γΔt — Spezielle Relativität: Zeitdehnung bewegter Uhren" },
+      { label: "Längenkontraktion", status: "etabliert", color: COLOR_ETABLIERT,
+        formula: "v=0.8*c; L=10; L*sqrt(1-v^2/c^2)",
+        info: "L' = L√(1−v²/c²) — Spezielle Relativität: Längenkontraktion bewegter Objekte" },
+      { label: "Relativistischer Impuls", status: "etabliert", color: COLOR_ETABLIERT,
+        formula: "v=0.8*c; m=1; m*v/sqrt(1-v^2/c^2)",
+        info: "p = γmv — Spezielle Relativität: Impuls bei hohen Geschwindigkeiten" },
+      { label: "Gravitative Zeitdilatation", status: "etabliert", color: COLOR_ETABLIERT,
+        formula: "M=1.989e30; r=6.96e8; dt=1; dt*sqrt(1-2*G*M/(r*c^2))",
+        info: "Δt' = Δt√(1−2GM/(rc²)) — Allgemeine Relativität: Zeitdehnung im Gravitationsfeld (Beispiel: Sonnenoberfläche)" },
+      { label: "Lichtablenkung an der Sonne", status: "etabliert", color: COLOR_ETABLIERT,
+        formula: "M=1.989e30; R=6.96e8; 4*G*M/(c^2*R)",
+        info: "δ = 4GM/(c²R) — klassischer Test der ART (Eddington 1919), Ergebnis in rad ≈ 1,75″" },
+      { label: "Periheldrehung des Merkur", status: "etabliert", color: COLOR_ETABLIERT,
+        formula: "M=1.989e30; a=5.79e10; e=0.2056; 6*pi*G*M/(c^2*a*(1-e^2))",
+        info: "Δφ = 6πGM/(c²a(1−e²)) — Periheldrehung pro Umlauf (Bahndaten Merkur), Ergebnis in rad" },
+    ]
+  },
+  quantengravitation: {
+    label: "Quantengravitation / ART",
+    items: [
+      { label: "Schwarzschild-Radius", status: "etabliert", color: COLOR_ETABLIERT,
+        formula: "M = 1.989e30; 2*G*M/c^2",
+        info: "exakte Lösung der Einstein-Feldgleichungen für sphärische, ungeladene Masse (M in kg, hier Sonnenmasse als Beispiel)" },
+      { label: "Hawking-Temperatur", status: "semiklassisch", color: COLOR_SEMIKLASSISCH,
+        formula: "M = 1.989e30; hbar*c^3 / (8*pi*G*M*kB)",
+        info: "Quantenfeldtheorie auf gekrümmter Raumzeit (nicht volle Quantengravitation), theoretisch hergeleitet, bislang nicht direkt gemessen" },
+      { label: "Bekenstein-Hawking-Entropie", status: "semiklassisch", color: COLOR_SEMIKLASSISCH,
+        formula: "M = 1.989e30; A = 4*pi*(2*G*M/c^2)^2; kB*c^3*A / (4*G*hbar)",
+        info: "verknüpft Schwarzes-Loch-Fläche mit Entropie; zentraler Hinweis auf Quantengravitation, aber selbst nicht deren vollständige Theorie" },
+      { label: "Planck-Länge", status: "etabliert", color: COLOR_ETABLIERT,
+        formula: "sqrt(hbar*G/c^3)",
+        info: "Skala, ab der Quanteneffekte der Raumzeit erwartet werden – Definition ist gesichert, was dort physikalisch passiert nicht" },
+      { label: "Krümmungsskalar (Friedmann, flach)", status: "etabliert", color: COLOR_ETABLIERT,
+        formula: "H0 = 2.2e-18; rho_c = 3*H0^2 / (8*pi*G); rho_c",
+        info: "kritische Dichte aus den Friedmann-Gleichungen (Einsteins Feldgleichungen für homogenes Universum), H0 als Beispielwert in 1/s" },
+      { label: "LQG Flächenquantisierung", status: "unbestätigte Kandidatentheorie", color: COLOR_KANDIDAT,
+        formula: "gamma = 0.2375; j = 1; 8*pi*gamma*lP^2*sqrt(j*(j+1))",
+        info: "Loop Quantum Gravity sagt diskrete Flächenspektren voraus; Immirzi-Parameter γ ist nicht unabhängig hergeleitet, sondern an Bekenstein-Hawking angepasst. Nicht experimentell bestätigt." },
+      { label: "Hawking-Strahlungsleistung", status: "semiklassisch", color: COLOR_SEMIKLASSISCH,
+        formula: "M=1.989e30; hbar*c^6/(15360*pi*G^2*M^2)",
+        info: "P = ħc⁶/(15360πG²M²) — abgestrahlte Leistung eines Schwarzen Lochs durch Hawking-Strahlung (Hawking 1975)" },
+      { label: "Verdampfungszeit Schwarzes Loch", status: "semiklassisch", color: COLOR_SEMIKLASSISCH,
+        formula: "M=1.989e30; 5120*pi*G^2*M^3/(hbar*c^4)",
+        info: "t = 5120πG²M³/(ħc⁴) — Zeit bis zur vollständigen Verdampfung durch Hawking-Strahlung (Beispiel: Sonnenmasse, Ergebnis in s, astronomisch lang)" },
+      { label: "Kaluza-Klein-Theorie", status: "unbestätigte Kandidatentheorie", color: COLOR_KANDIDAT,
+        formula: "n=1; R=lP; n*hbar/(R*c)",
+        info: "KK-Massenturm m_n = nħ/(Rc) bei angenommenem Kompaktifizierungsradius R≈Planck-Länge. Unbewiesene Annahme über R, keine bestätigte Vorhersage — reine Kandidatentheorie." },
+      { label: "String-Theorie (Extra-Dimensionen)", status: "unbestätigte Kandidatentheorie", color: COLOR_KANDIDAT,
+        formula: "ls=lP; hbar*c/ls",
+        info: "charakteristische String-Energieskala ħc/ℓₛ bei angenommener String-Länge ℓₛ≈Planck-Länge. 10/11 Raumzeit-Dimensionen sind Modellannahme, experimentell nicht bestätigt." },
+      { label: "ADD-Modell (große Extra-Dimensionen)", status: "unbestätigte Kandidatentheorie", color: COLOR_KANDIDAT,
+        formula: "n=2; R=1e-3; (mP^2/R^n)^(1/(2+n))",
+        info: "effektive höherdimensionale Planck-Skala M* aus 4D-Planck-Masse und n Extra-Dimensionen der Größe R (Beispiel n=2, R=1mm). Rein illustrative Größenordnung, keine bestätigte Physik." },
+    ]
+  },
+};
+
+const formulaCatSelect = document.getElementById('formulaCatSelect');
+const formulaTemplatesDiv = document.getElementById('formulaTemplates');
+
+Object.entries(FORMULA_CATEGORIES).forEach(([key, cat]) => {
+  const opt = document.createElement('option');
+  opt.value = key;
+  opt.textContent = cat.label;
+  formulaCatSelect.appendChild(opt);
 });
+
+function renderFormulaCategory(key) {
+  formulaTemplatesDiv.innerHTML = '';
+  FORMULA_CATEGORIES[key].items.forEach(t => {
+    const btn = document.createElement('button');
+    btn.className = 'const-btn';
+    btn.innerHTML = `<div class="const-top"><span class="const-sym mono" style="color:${t.color}">${t.label}</span>
+      <span class="const-unit mono" style="color:${t.color}">${t.status}</span></div>
+      <div class="const-name">${t.info}</div>`;
+    btn.onclick = () => {
+      formulaInput.value = t.formula;
+      evaluate();
+    };
+    formulaTemplatesDiv.appendChild(btn);
+  });
+}
+formulaCatSelect.onchange = () => renderFormulaCategory(formulaCatSelect.value);
 
 // ---------- Function plot ----------
 const plotInput = document.getElementById('plotInput');
@@ -249,10 +515,10 @@ function fitCanvas(cv) {
 }
 
 function drawAxes(ctx, W, H, xMin, xMax, yMin, yMax, marginL, marginB, marginT, marginR) {
-  ctx.strokeStyle = '#D3D7DA';
+  ctx.strokeStyle = '#DCD7E6';
   ctx.lineWidth = 1;
   ctx.font = '20px IBM Plex Mono, monospace';
-  ctx.fillStyle = '#5B6268';
+  ctx.fillStyle = '#6B6575';
   const plotW = W - marginL - marginR, plotH = H - marginT - marginB;
   for (let i = 0; i <= 5; i++) {
     const gx = marginL + plotW * i / 5;
@@ -297,7 +563,7 @@ function plot() {
   const { plotW, plotH } = drawAxes(ctx, W, H, xMin, xMax, yMin, yMax, marginL, marginB, marginT, marginR);
   function toPx(x) { return marginL + (x - xMin) / (xMax - xMin) * plotW; }
   function toPy(y) { return marginT + (1 - (y - yMin) / (yMax - yMin)) * plotH; }
-  ctx.strokeStyle = '#0E9E76'; ctx.lineWidth = 3; ctx.beginPath();
+  ctx.strokeStyle = '#8B7FC7'; ctx.lineWidth = 3; ctx.beginPath();
   let started = false;
   data.forEach(d => {
     if (!isFinite(d.y)) { started = false; return; }
@@ -455,17 +721,17 @@ function draw2D_points(measurements, theoryLine, unit, xLabel) {
   function toPx(i) { return marginL + (i - 0.5) / n * plotW; }
   function toPy(y) { return marginT + (1 - (y - yMin)/(yMax-yMin)) * plotH; }
   // theory line
-  ctx.strokeStyle = '#B5720E'; ctx.lineWidth = 2; ctx.setLineDash([8,6]);
+  ctx.strokeStyle = '#6B5B95'; ctx.lineWidth = 2; ctx.setLineDash([8,6]);
   ctx.beginPath(); ctx.moveTo(marginL, toPy(theoryLine)); ctx.lineTo(marginL+plotW, toPy(theoryLine)); ctx.stroke();
   ctx.setLineDash([]);
   // points
-  ctx.fillStyle = '#0E9E76';
+  ctx.fillStyle = '#8B7FC7';
   measurements.forEach((m,i) => {
     const px = toPx(i+1), py = toPy(m);
     ctx.beginPath(); ctx.arc(px, py, 6, 0, 2*Math.PI); ctx.fill();
   });
-  expLegend.innerHTML = `<span><span class="dot" style="background:#B5720E"></span>Theorie: ${theoryLine.toFixed(4)} ${unit}</span>
-    <span><span class="dot" style="background:#0E9E76"></span>Einzelmessung</span>`;
+  expLegend.innerHTML = `<span><span class="dot" style="background:#6B5B95"></span>Theorie: ${theoryLine.toFixed(4)} ${unit}</span>
+    <span><span class="dot" style="background:#8B7FC7"></span>Einzelmessung</span>`;
 }
 
 function drawDecay(points) {
@@ -480,19 +746,19 @@ function drawDecay(points) {
   function toPx(t) { return marginL + t/tMax*plotW; }
   function toPy(N) { return marginT + (1 - N/yMax) * plotH; }
   // theory curve
-  ctx.strokeStyle = '#B5720E'; ctx.lineWidth = 2; ctx.beginPath();
+  ctx.strokeStyle = '#6B5B95'; ctx.lineWidth = 2; ctx.beginPath();
   points.forEach((pt,i) => { const px=toPx(pt.t), py=toPy(pt.N_theory); i===0?ctx.moveTo(px,py):ctx.lineTo(px,py); });
   ctx.stroke();
   // measured points + error bars
-  ctx.strokeStyle = '#0E9E76'; ctx.fillStyle = '#0E9E76'; ctx.lineWidth = 2;
+  ctx.strokeStyle = '#8B7FC7'; ctx.fillStyle = '#8B7FC7'; ctx.lineWidth = 2;
   points.forEach(pt => {
     const px = toPx(pt.t), py = toPy(pt.N_measured);
     const errPx = Math.abs(toPy(pt.N_measured - pt.err) - toPy(pt.N_measured + pt.err)) / 2;
     ctx.beginPath(); ctx.moveTo(px, py-errPx); ctx.lineTo(px, py+errPx); ctx.stroke();
     ctx.beginPath(); ctx.arc(px, py, 5, 0, 2*Math.PI); ctx.fill();
   });
-  expLegend.innerHTML = `<span><span class="dot" style="background:#B5720E"></span>Theorie N(t)</span>
-    <span><span class="dot" style="background:#0E9E76"></span>Simulierte Messung ± √N</span>`;
+  expLegend.innerHTML = `<span><span class="dot" style="background:#6B5B95"></span>Theorie N(t)</span>
+    <span><span class="dot" style="background:#8B7FC7"></span>Simulierte Messung ± √N</span>`;
 }
 
 function drawInterference(points) {
@@ -506,10 +772,10 @@ function drawInterference(points) {
   const { plotW, plotH } = drawAxes(ctx, W, H, xMin, xMax, yMin, yMax, marginL, marginB, marginT, marginR);
   function toPx(x) { return marginL + (x-xMin)/(xMax-xMin)*plotW; }
   function toPy(y) { return marginT + (1 - (y-yMin)/(yMax-yMin))*plotH; }
-  ctx.strokeStyle = '#0E9E76'; ctx.lineWidth = 2.5; ctx.beginPath();
+  ctx.strokeStyle = '#8B7FC7'; ctx.lineWidth = 2.5; ctx.beginPath();
   points.forEach((pt,i) => { const px=toPx(pt.x), py=toPy(pt.y); i===0?ctx.moveTo(px,py):ctx.lineTo(px,py); });
   ctx.stroke();
-  expLegend.innerHTML = `<span><span class="dot" style="background:#0E9E76"></span>Intensität I(θ) [x-Achse in mrad]</span>`;
+  expLegend.innerHTML = `<span><span class="dot" style="background:#8B7FC7"></span>Intensität I(θ) [x-Achse in mrad]</span>`;
 }
 
 function runExperiment() {
@@ -520,10 +786,442 @@ function runExperiment() {
 expSelect.onchange = () => buildParamInputs(expSelect.value);
 document.getElementById('runExpBtn').onclick = runExperiment;
 
+const ELEMENTS = [
+  { z:1, sym:"H", name:"Wasserstoff", mass:1.008, period:1, group:1, cat:"nichtmetall", econf:"1s¹", mp:13.99 },
+  { z:2, sym:"He", name:"Helium", mass:4.0026, period:1, group:18, cat:"edelgas", econf:"1s²", mp:0.95 },
+  { z:3, sym:"Li", name:"Lithium", mass:6.94, period:2, group:1, cat:"alkalimetall", econf:"[He] 2s¹", mp:453.65 },
+  { z:4, sym:"Be", name:"Beryllium", mass:9.0122, period:2, group:2, cat:"erdalkalimetall", econf:"[He] 2s²", mp:1560 },
+  { z:5, sym:"B", name:"Bor", mass:10.81, period:2, group:13, cat:"halbmetall", econf:"[He] 2s² 2p¹", mp:2349 },
+  { z:6, sym:"C", name:"Kohlenstoff", mass:12.011, period:2, group:14, cat:"nichtmetall", econf:"[He] 2s² 2p²", mp:3823 },
+  { z:7, sym:"N", name:"Stickstoff", mass:14.007, period:2, group:15, cat:"nichtmetall", econf:"[He] 2s² 2p³", mp:63.15 },
+  { z:8, sym:"O", name:"Sauerstoff", mass:15.999, period:2, group:16, cat:"nichtmetall", econf:"[He] 2s² 2p⁴", mp:54.36 },
+  { z:9, sym:"F", name:"Fluor", mass:18.998, period:2, group:17, cat:"halogen", econf:"[He] 2s² 2p⁵", mp:53.53 },
+  { z:10, sym:"Ne", name:"Neon", mass:20.18, period:2, group:18, cat:"edelgas", econf:"[He] 2s² 2p⁶", mp:24.56 },
+  { z:11, sym:"Na", name:"Natrium", mass:22.99, period:3, group:1, cat:"alkalimetall", econf:"[Ne] 3s¹", mp:370.87 },
+  { z:12, sym:"Mg", name:"Magnesium", mass:24.305, period:3, group:2, cat:"erdalkalimetall", econf:"[Ne] 3s²", mp:923 },
+  { z:13, sym:"Al", name:"Aluminium", mass:26.982, period:3, group:13, cat:"metall", econf:"[Ne] 3s² 3p¹", mp:933.47 },
+  { z:14, sym:"Si", name:"Silicium", mass:28.085, period:3, group:14, cat:"halbmetall", econf:"[Ne] 3s² 3p²", mp:1687 },
+  { z:15, sym:"P", name:"Phosphor", mass:30.974, period:3, group:15, cat:"nichtmetall", econf:"[Ne] 3s² 3p³", mp:317.3 },
+  { z:16, sym:"S", name:"Schwefel", mass:32.06, period:3, group:16, cat:"nichtmetall", econf:"[Ne] 3s² 3p⁴", mp:388.36 },
+  { z:17, sym:"Cl", name:"Chlor", mass:35.45, period:3, group:17, cat:"halogen", econf:"[Ne] 3s² 3p⁵", mp:171.6 },
+  { z:18, sym:"Ar", name:"Argon", mass:39.948, period:3, group:18, cat:"edelgas", econf:"[Ne] 3s² 3p⁶", mp:83.8 },
+  { z:19, sym:"K", name:"Kalium", mass:39.098, period:4, group:1, cat:"alkalimetall", econf:"[Ar] 4s¹", mp:336.53 },
+  { z:20, sym:"Ca", name:"Calcium", mass:40.078, period:4, group:2, cat:"erdalkalimetall", econf:"[Ar] 4s²", mp:1115 },
+  { z:21, sym:"Sc", name:"Scandium", mass:44.956, period:4, group:3, cat:"uebergangsmetall", econf:"[Ar] 3d¹ 4s²", mp:1814 },
+  { z:22, sym:"Ti", name:"Titan", mass:47.867, period:4, group:4, cat:"uebergangsmetall", econf:"[Ar] 3d² 4s²", mp:1941 },
+  { z:23, sym:"V", name:"Vanadium", mass:50.942, period:4, group:5, cat:"uebergangsmetall", econf:"[Ar] 3d³ 4s²", mp:2183 },
+  { z:24, sym:"Cr", name:"Chrom", mass:51.996, period:4, group:6, cat:"uebergangsmetall", econf:"[Ar] 3d⁵ 4s¹", mp:2180 },
+  { z:25, sym:"Mn", name:"Mangan", mass:54.938, period:4, group:7, cat:"uebergangsmetall", econf:"[Ar] 3d⁵ 4s²", mp:1519 },
+  { z:26, sym:"Fe", name:"Eisen", mass:55.845, period:4, group:8, cat:"uebergangsmetall", econf:"[Ar] 3d⁶ 4s²", mp:1811 },
+  { z:27, sym:"Co", name:"Cobalt", mass:58.933, period:4, group:9, cat:"uebergangsmetall", econf:"[Ar] 3d⁷ 4s²", mp:1768 },
+  { z:28, sym:"Ni", name:"Nickel", mass:58.693, period:4, group:10, cat:"uebergangsmetall", econf:"[Ar] 3d⁸ 4s²", mp:1728 },
+  { z:29, sym:"Cu", name:"Kupfer", mass:63.546, period:4, group:11, cat:"uebergangsmetall", econf:"[Ar] 3d¹⁰ 4s¹", mp:1357.77 },
+  { z:30, sym:"Zn", name:"Zink", mass:65.38, period:4, group:12, cat:"uebergangsmetall", econf:"[Ar] 3d¹⁰ 4s²", mp:692.68 },
+  { z:31, sym:"Ga", name:"Gallium", mass:69.723, period:4, group:13, cat:"metall", econf:"[Ar] 3d¹⁰ 4s² 4p¹", mp:302.91 },
+  { z:32, sym:"Ge", name:"Germanium", mass:72.63, period:4, group:14, cat:"halbmetall", econf:"[Ar] 3d¹⁰ 4s² 4p²", mp:1211.4 },
+  { z:33, sym:"As", name:"Arsen", mass:74.922, period:4, group:15, cat:"halbmetall", econf:"[Ar] 3d¹⁰ 4s² 4p³", mp:1090 },
+  { z:34, sym:"Se", name:"Selen", mass:78.971, period:4, group:16, cat:"nichtmetall", econf:"[Ar] 3d¹⁰ 4s² 4p⁴", mp:494 },
+  { z:35, sym:"Br", name:"Brom", mass:79.904, period:4, group:17, cat:"halogen", econf:"[Ar] 3d¹⁰ 4s² 4p⁵", mp:265.8 },
+  { z:36, sym:"Kr", name:"Krypton", mass:83.798, period:4, group:18, cat:"edelgas", econf:"[Ar] 3d¹⁰ 4s² 4p⁶", mp:115.79 },
+  { z:37, sym:"Rb", name:"Rubidium", mass:85.468, period:5, group:1, cat:"alkalimetall", econf:"[Kr] 5s¹", mp:312.46 },
+  { z:38, sym:"Sr", name:"Strontium", mass:87.62, period:5, group:2, cat:"erdalkalimetall", econf:"[Kr] 5s²", mp:1050 },
+  { z:39, sym:"Y", name:"Yttrium", mass:88.906, period:5, group:3, cat:"uebergangsmetall", econf:"[Kr] 4d¹ 5s²", mp:1799 },
+  { z:40, sym:"Zr", name:"Zirconium", mass:91.224, period:5, group:4, cat:"uebergangsmetall", econf:"[Kr] 4d² 5s²", mp:2128 },
+  { z:41, sym:"Nb", name:"Niob", mass:92.906, period:5, group:5, cat:"uebergangsmetall", econf:"[Kr] 4d⁴ 5s¹", mp:2750 },
+  { z:42, sym:"Mo", name:"Molybdän", mass:95.95, period:5, group:6, cat:"uebergangsmetall", econf:"[Kr] 4d⁵ 5s¹", mp:2896 },
+  { z:43, sym:"Tc", name:"Technetium", mass:98, period:5, group:7, cat:"uebergangsmetall", econf:"[Kr] 4d⁵ 5s²", mp:2430 },
+  { z:44, sym:"Ru", name:"Ruthenium", mass:101.07, period:5, group:8, cat:"uebergangsmetall", econf:"[Kr] 4d⁷ 5s¹", mp:2607 },
+  { z:45, sym:"Rh", name:"Rhodium", mass:102.91, period:5, group:9, cat:"uebergangsmetall", econf:"[Kr] 4d⁸ 5s¹", mp:2237 },
+  { z:46, sym:"Pd", name:"Palladium", mass:106.42, period:5, group:10, cat:"uebergangsmetall", econf:"[Kr] 4d¹⁰", mp:1828.05 },
+  { z:47, sym:"Ag", name:"Silber", mass:107.87, period:5, group:11, cat:"uebergangsmetall", econf:"[Kr] 4d¹⁰ 5s¹", mp:1234.93 },
+  { z:48, sym:"Cd", name:"Cadmium", mass:112.41, period:5, group:12, cat:"uebergangsmetall", econf:"[Kr] 4d¹⁰ 5s²", mp:594.22 },
+  { z:49, sym:"In", name:"Indium", mass:114.82, period:5, group:13, cat:"metall", econf:"[Kr] 4d¹⁰ 5s² 5p¹", mp:429.75 },
+  { z:50, sym:"Sn", name:"Zinn", mass:118.71, period:5, group:14, cat:"metall", econf:"[Kr] 4d¹⁰ 5s² 5p²", mp:505.08 },
+  { z:51, sym:"Sb", name:"Antimon", mass:121.76, period:5, group:15, cat:"halbmetall", econf:"[Kr] 4d¹⁰ 5s² 5p³", mp:903.78 },
+  { z:52, sym:"Te", name:"Tellur", mass:127.6, period:5, group:16, cat:"halbmetall", econf:"[Kr] 4d¹⁰ 5s² 5p⁴", mp:722.66 },
+  { z:53, sym:"I", name:"Iod", mass:126.9, period:5, group:17, cat:"halogen", econf:"[Kr] 4d¹⁰ 5s² 5p⁵", mp:386.85 },
+  { z:54, sym:"Xe", name:"Xenon", mass:131.29, period:5, group:18, cat:"edelgas", econf:"[Kr] 4d¹⁰ 5s² 5p⁶", mp:161.4 },
+  { z:55, sym:"Cs", name:"Caesium", mass:132.91, period:6, group:1, cat:"alkalimetall", econf:"[Xe] 6s¹", mp:301.59 },
+  { z:56, sym:"Ba", name:"Barium", mass:137.33, period:6, group:2, cat:"erdalkalimetall", econf:"[Xe] 6s²", mp:1000 },
+  { z:57, sym:"La", name:"Lanthan", mass:138.91, period:6, group:3, cat:"lanthanoid", econf:"[Xe] 5d¹ 6s²", mp:1193 },
+  { z:58, sym:"Ce", name:"Cer", mass:140.12, period:6, group:3, cat:"lanthanoid", econf:"[Xe] 4f¹ 5d¹ 6s²", mp:1068 },
+  { z:59, sym:"Pr", name:"Praseodym", mass:140.91, period:6, group:3, cat:"lanthanoid", econf:"[Xe] 4f³ 6s²", mp:1208 },
+  { z:60, sym:"Nd", name:"Neodym", mass:144.24, period:6, group:3, cat:"lanthanoid", econf:"[Xe] 4f⁴ 6s²", mp:1297 },
+  { z:61, sym:"Pm", name:"Promethium", mass:145, period:6, group:3, cat:"lanthanoid", econf:"[Xe] 4f⁵ 6s²", mp:1315 },
+  { z:62, sym:"Sm", name:"Samarium", mass:150.36, period:6, group:3, cat:"lanthanoid", econf:"[Xe] 4f⁶ 6s²", mp:1345 },
+  { z:63, sym:"Eu", name:"Europium", mass:151.96, period:6, group:3, cat:"lanthanoid", econf:"[Xe] 4f⁷ 6s²", mp:1099 },
+  { z:64, sym:"Gd", name:"Gadolinium", mass:157.25, period:6, group:3, cat:"lanthanoid", econf:"[Xe] 4f⁷ 5d¹ 6s²", mp:1585 },
+  { z:65, sym:"Tb", name:"Terbium", mass:158.93, period:6, group:3, cat:"lanthanoid", econf:"[Xe] 4f⁹ 6s²", mp:1629 },
+  { z:66, sym:"Dy", name:"Dysprosium", mass:162.5, period:6, group:3, cat:"lanthanoid", econf:"[Xe] 4f¹⁰ 6s²", mp:1680 },
+  { z:67, sym:"Ho", name:"Holmium", mass:164.93, period:6, group:3, cat:"lanthanoid", econf:"[Xe] 4f¹¹ 6s²", mp:1734 },
+  { z:68, sym:"Er", name:"Erbium", mass:167.26, period:6, group:3, cat:"lanthanoid", econf:"[Xe] 4f¹² 6s²", mp:1802 },
+  { z:69, sym:"Tm", name:"Thulium", mass:168.93, period:6, group:3, cat:"lanthanoid", econf:"[Xe] 4f¹³ 6s²", mp:1818 },
+  { z:70, sym:"Yb", name:"Ytterbium", mass:173.05, period:6, group:3, cat:"lanthanoid", econf:"[Xe] 4f¹⁴ 6s²", mp:1097 },
+  { z:71, sym:"Lu", name:"Lutetium", mass:174.97, period:6, group:3, cat:"lanthanoid", econf:"[Xe] 4f¹⁴ 5d¹ 6s²", mp:1925 },
+  { z:72, sym:"Hf", name:"Hafnium", mass:178.49, period:6, group:4, cat:"uebergangsmetall", econf:"[Xe] 4f¹⁴ 5d² 6s²", mp:2506 },
+  { z:73, sym:"Ta", name:"Tantal", mass:180.95, period:6, group:5, cat:"uebergangsmetall", econf:"[Xe] 4f¹⁴ 5d³ 6s²", mp:3290 },
+  { z:74, sym:"W", name:"Wolfram", mass:183.84, period:6, group:6, cat:"uebergangsmetall", econf:"[Xe] 4f¹⁴ 5d⁴ 6s²", mp:3695 },
+  { z:75, sym:"Re", name:"Rhenium", mass:186.21, period:6, group:7, cat:"uebergangsmetall", econf:"[Xe] 4f¹⁴ 5d⁵ 6s²", mp:3459 },
+  { z:76, sym:"Os", name:"Osmium", mass:190.23, period:6, group:8, cat:"uebergangsmetall", econf:"[Xe] 4f¹⁴ 5d⁶ 6s²", mp:3306 },
+  { z:77, sym:"Ir", name:"Iridium", mass:192.22, period:6, group:9, cat:"uebergangsmetall", econf:"[Xe] 4f¹⁴ 5d⁷ 6s²", mp:2719 },
+  { z:78, sym:"Pt", name:"Platin", mass:195.08, period:6, group:10, cat:"uebergangsmetall", econf:"[Xe] 4f¹⁴ 5d⁹ 6s¹", mp:2041.4 },
+  { z:79, sym:"Au", name:"Gold", mass:196.97, period:6, group:11, cat:"uebergangsmetall", econf:"[Xe] 4f¹⁴ 5d¹⁰ 6s¹", mp:1337.33 },
+  { z:80, sym:"Hg", name:"Quecksilber", mass:200.59, period:6, group:12, cat:"uebergangsmetall", econf:"[Xe] 4f¹⁴ 5d¹⁰ 6s²", mp:234.32 },
+  { z:81, sym:"Tl", name:"Thallium", mass:204.38, period:6, group:13, cat:"metall", econf:"[Xe] 4f¹⁴ 5d¹⁰ 6s² 6p¹", mp:577 },
+  { z:82, sym:"Pb", name:"Blei", mass:207.2, period:6, group:14, cat:"metall", econf:"[Xe] 4f¹⁴ 5d¹⁰ 6s² 6p²", mp:600.61 },
+  { z:83, sym:"Bi", name:"Bismut", mass:208.98, period:6, group:15, cat:"metall", econf:"[Xe] 4f¹⁴ 5d¹⁰ 6s² 6p³", mp:544.7 },
+  { z:84, sym:"Po", name:"Polonium", mass:209, period:6, group:16, cat:"halbmetall", econf:"[Xe] 4f¹⁴ 5d¹⁰ 6s² 6p⁴", mp:527 },
+  { z:85, sym:"At", name:"Astat", mass:210, period:6, group:17, cat:"halogen", econf:"[Xe] 4f¹⁴ 5d¹⁰ 6s² 6p⁵", mp:575 },
+  { z:86, sym:"Rn", name:"Radon", mass:222, period:6, group:18, cat:"edelgas", econf:"[Xe] 4f¹⁴ 5d¹⁰ 6s² 6p⁶", mp:202 },
+  { z:87, sym:"Fr", name:"Francium", mass:223, period:7, group:1, cat:"alkalimetall", econf:"[Rn] 7s¹", mp:300 },
+  { z:88, sym:"Ra", name:"Radium", mass:226, period:7, group:2, cat:"erdalkalimetall", econf:"[Rn] 7s²", mp:973 },
+  { z:89, sym:"Ac", name:"Actinium", mass:227, period:7, group:3, cat:"actinoid", econf:"[Rn] 6d¹ 7s²", mp:1500 },
+  { z:90, sym:"Th", name:"Thorium", mass:232.04, period:7, group:3, cat:"actinoid", econf:"[Rn] 6d² 7s²", mp:2023 },
+  { z:91, sym:"Pa", name:"Protactinium", mass:231.04, period:7, group:3, cat:"actinoid", econf:"[Rn] 5f² 6d¹ 7s²", mp:1841 },
+  { z:92, sym:"U", name:"Uran", mass:238.03, period:7, group:3, cat:"actinoid", econf:"[Rn] 5f³ 6d¹ 7s²", mp:1405.3 },
+  { z:93, sym:"Np", name:"Neptunium", mass:237, period:7, group:3, cat:"actinoid", econf:"[Rn] 5f⁴ 6d¹ 7s²", mp:917 },
+  { z:94, sym:"Pu", name:"Plutonium", mass:244, period:7, group:3, cat:"actinoid", econf:"[Rn] 5f⁶ 7s²", mp:912.5 },
+  { z:95, sym:"Am", name:"Americium", mass:243, period:7, group:3, cat:"actinoid", econf:"[Rn] 5f⁷ 7s²", mp:1449 },
+  { z:96, sym:"Cm", name:"Curium", mass:247, period:7, group:3, cat:"actinoid", econf:"[Rn] 5f⁷ 6d¹ 7s²", mp:1613 },
+  { z:97, sym:"Bk", name:"Berkelium", mass:247, period:7, group:3, cat:"actinoid", econf:"[Rn] 5f⁹ 7s²", mp:1259 },
+  { z:98, sym:"Cf", name:"Californium", mass:251, period:7, group:3, cat:"actinoid", econf:"[Rn] 5f¹⁰ 7s²", mp:1173 },
+  { z:99, sym:"Es", name:"Einsteinium", mass:252, period:7, group:3, cat:"actinoid", econf:"[Rn] 5f¹¹ 7s²", mp:1133 },
+  { z:100, sym:"Fm", name:"Fermium", mass:257, period:7, group:3, cat:"actinoid", econf:"[Rn] 5f¹² 7s²", mp:1800 },
+  { z:101, sym:"Md", name:"Mendelevium", mass:258, period:7, group:3, cat:"actinoid", econf:"[Rn] 5f¹³ 7s²", mp:1100 },
+  { z:102, sym:"No", name:"Nobelium", mass:259, period:7, group:3, cat:"actinoid", econf:"[Rn] 5f¹⁴ 7s²", mp:1100 },
+  { z:103, sym:"Lr", name:"Lawrencium", mass:266, period:7, group:3, cat:"actinoid", econf:"[Rn] 5f¹⁴ 7s² 7p¹", mp:1900 },
+  { z:104, sym:"Rf", name:"Rutherfordium", mass:267, period:7, group:4, cat:"uebergangsmetall", econf:"[Rn] 5f¹⁴ 6d² 7s²", mp:2400 },
+  { z:105, sym:"Db", name:"Dubnium", mass:268, period:7, group:5, cat:"uebergangsmetall", econf:"[Rn] 5f¹⁴ 6d³ 7s²", mp:null },
+  { z:106, sym:"Sg", name:"Seaborgium", mass:269, period:7, group:6, cat:"uebergangsmetall", econf:"[Rn] 5f¹⁴ 6d⁴ 7s²", mp:null },
+  { z:107, sym:"Bh", name:"Bohrium", mass:270, period:7, group:7, cat:"uebergangsmetall", econf:"[Rn] 5f¹⁴ 6d⁵ 7s²", mp:null },
+  { z:108, sym:"Hs", name:"Hassium", mass:269, period:7, group:8, cat:"uebergangsmetall", econf:"[Rn] 5f¹⁴ 6d⁶ 7s²", mp:null },
+  { z:109, sym:"Mt", name:"Meitnerium", mass:278, period:7, group:9, cat:"uebergangsmetall", econf:"[Rn] 5f¹⁴ 6d⁷ 7s²", mp:null },
+  { z:110, sym:"Ds", name:"Darmstadtium", mass:281, period:7, group:10, cat:"uebergangsmetall", econf:"[Rn] 5f¹⁴ 6d⁸ 7s²", mp:null },
+  { z:111, sym:"Rg", name:"Roentgenium", mass:282, period:7, group:11, cat:"uebergangsmetall", econf:"[Rn] 5f¹⁴ 6d⁹ 7s²", mp:null },
+  { z:112, sym:"Cn", name:"Copernicium", mass:285, period:7, group:12, cat:"uebergangsmetall", econf:"[Rn] 5f¹⁴ 6d¹⁰ 7s²", mp:null },
+  { z:113, sym:"Nh", name:"Nihonium", mass:286, period:7, group:13, cat:"metall", econf:"[Rn] 5f¹⁴ 6d¹⁰ 7s² 7p¹", mp:null },
+  { z:114, sym:"Fl", name:"Flerovium", mass:289, period:7, group:14, cat:"metall", econf:"[Rn] 5f¹⁴ 6d¹⁰ 7s² 7p²", mp:null },
+  { z:115, sym:"Mc", name:"Moscovium", mass:290, period:7, group:15, cat:"metall", econf:"[Rn] 5f¹⁴ 6d¹⁰ 7s² 7p³", mp:null },
+  { z:116, sym:"Lv", name:"Livermorium", mass:293, period:7, group:16, cat:"metall", econf:"[Rn] 5f¹⁴ 6d¹⁰ 7s² 7p⁴", mp:null },
+  { z:117, sym:"Ts", name:"Tenness", mass:294, period:7, group:17, cat:"halogen", econf:"[Rn] 5f¹⁴ 6d¹⁰ 7s² 7p⁵", mp:null },
+  { z:118, sym:"Og", name:"Oganesson", mass:294, period:7, group:18, cat:"edelgas", econf:"[Rn] 5f¹⁴ 6d¹⁰ 7s² 7p⁶", mp:null },
+];
+
+// ---------- Periodensystem ----------
+const CATEGORY_LABELS = {
+  alkalimetall: "Alkalimetall",
+  erdalkalimetall: "Erdalkalimetall",
+  uebergangsmetall: "Übergangsmetall",
+  metall: "Metall",
+  halbmetall: "Halbmetall",
+  nichtmetall: "Nichtmetall",
+  halogen: "Halogen",
+  edelgas: "Edelgas",
+  lanthanoid: "Lanthanoid",
+  actinoid: "Actinoid",
+};
+
+const ptableDiv = document.getElementById('ptable');
+const ptLegendDiv = document.getElementById('ptLegend');
+const ptDetailDiv = document.getElementById('ptDetail');
+
+function renderPeriodicTable() {
+  ptableDiv.innerHTML = '';
+  ELEMENTS.forEach(el => {
+    const cell = document.createElement('button');
+    cell.className = 'pt-cell cat-' + el.cat;
+    let col, row;
+    if (el.cat === 'lanthanoid') { row = 9; col = (el.z - 57) + 4; }
+    else if (el.cat === 'actinoid') { row = 10; col = (el.z - 89) + 4; }
+    else { row = el.period; col = el.group; }
+    cell.style.gridColumn = col;
+    cell.style.gridRow = row;
+    cell.innerHTML = `<span class="pt-num">${el.z}</span><span class="pt-sym">${el.sym}</span>`;
+    cell.onclick = () => showElementDetail(el);
+    ptableDiv.appendChild(cell);
+  });
+
+  ptLegendDiv.innerHTML = '';
+  Object.entries(CATEGORY_LABELS).forEach(([key, label]) => {
+    const span = document.createElement('span');
+    span.innerHTML = `<span class="dot cat-${key}"></span>${label}`;
+    ptLegendDiv.appendChild(span);
+  });
+}
+
+function showElementDetail(el) {
+  const mpText = el.mp === null ? 'unbekannt (noch nicht gemessen)' : `${el.mp} K`;
+  ptDetailDiv.innerHTML = `
+    <div class="pt-detail-row"><span>Name</span><b>${el.name} (${el.sym})</b></div>
+    <div class="pt-detail-row"><span>Ordnungszahl</span><b>${el.z}</b></div>
+    <div class="pt-detail-row"><span>Atommasse</span><b>${el.mass} u</b></div>
+    <div class="pt-detail-row"><span>Elektronenkonfiguration</span><b>${el.econf}</b></div>
+    <div class="pt-detail-row"><span>Schmelzpunkt</span><b>${mpText}</b></div>
+    <div class="pt-detail-row"><span>Kategorie</span><b>${CATEGORY_LABELS[el.cat]}</b></div>
+  `;
+}
+
+// ---------- 7-Tage-Lernplan ----------
+const LEARNING_PLAN = [
+  {
+    day: 1, title: "Die Sprache der Veränderung und des Raums",
+    intro: "Heute legst du die Werkzeuge fest, mit denen Physiker beschreiben, wie sich Energie im Raum bewegt und wirbelt.",
+    concepts: [
+      { name: "Der Differenzialquotient (Die Ableitung)", formula: "f'(x) = lim[h→0] (f(x+h) − f(x)) / h",
+        meaning: "Misst die exakte Steigung oder Veränderung einer Kurve in einem unendlich kleinen Punkt." },
+      { name: "Der Gradient (∇f — Nabla-Symbol)", formula: "∇f = (∂f/∂x, ∂f/∂y, ∂f/∂z)",
+        meaning: "Zeigt im 3D-Raum als Pfeil exakt in die Richtung, in der sich ein Wert am steilsten erhöht." },
+      { name: "Die Rotation eines Vektorfeldes (Curl)", formula: "rot F⃗ = ∇ × F⃗",
+        meaning: "Misst, ob und wie stark ein Feld um einen bestimmten Punkt herumwirbelt." },
+    ]
+  },
+  {
+    day: 2, title: "Das Verhalten von Feldern messen",
+    intro: "Ein Feld ist ein Raum, in dem an jedem Punkt eine Kraft oder ein Wert existiert. Heute lernst du, wie man Flüsse und Quellen misst.",
+    concepts: [
+      { name: "Die Divergenz (Quellen und Senken)", formula: "div F⃗ = ∇ · F⃗",
+        meaning: "Zeigt an, ob an einem Punkt Energie „entsteht” (Quelle) oder „verschwindet” (Senke)." },
+      { name: "Der Laplace-Operator (Δ)", formula: "Δf = ∇²f = ∂²f/∂x² + ∂²f/∂y² + ∂²f/∂z²",
+        meaning: "Misst die Krümmung eines Feldes — genutzt für Wellen und Potentialverteilungen." },
+      { name: "Das Skalarprodukt (Dot Product)", formula: "a⃗ · b⃗ = aₓbₓ + a_yb_y + a_zb_z",
+        meaning: "Multipliziert zwei Vektoren zu einer Zahl; zeigt, wie sehr sie in dieselbe Richtung weisen." },
+    ]
+  },
+  {
+    day: 3, title: "Die Geometrie von Drehungen (Lineare Algebra)",
+    intro: "Um Drehungen mathematisch sauber zu beschreiben, nutzt die Physik Matrizen.",
+    concepts: [
+      { name: "Die Drehmatrix (Rotation in 2D)", formula: "R = [[cosθ, −sinθ], [sinθ, cosθ]]",
+        meaning: "Multipliziert man einen Vektor mit dieser Matrix, wird er um den Winkel θ gedreht." },
+      { name: "Das Kreuzprodukt (Vector Product)", formula: "a⃗ × b⃗ = c⃗",
+        meaning: "Erzeugt aus zwei Vektoren einen dritten, der senkrecht auf beiden steht (Fliehkraft, Magnetfelder)." },
+      { name: "Eigenwerte und Eigenvektoren", formula: "A v⃗ = λ v⃗",
+        meaning: "Richtungen v⃗, die sich bei einer Raumveränderung A nicht drehen, nur strecken/stauchen (λ)." },
+    ]
+  },
+  {
+    day: 4, title: "Die Gesetze der Wellen und Schwingungen",
+    intro: "Energie bewegt sich oft in Wellen — Frequenzen und Schwingungen basieren auf diesen Prinzipien.",
+    concepts: [
+      { name: "Die klassische Wellengleichung", formula: "∂²u/∂t² = c² Δu",
+        meaning: "Beschreibt, wie sich eine Störung mit Geschwindigkeit c durch den Raum ausbreitet." },
+      { name: "Die Eulersche Formel", formula: "e^(iφ) = cosφ + i sinφ",
+        meaning: "Verbindet die e-Funktion mit Kreisbewegungen über komplexe Zahlen." },
+      { name: "Der harmonische Oszillator", formula: "ẍ + ω²x = 0",
+        meaning: "Grundgleichung für jedes System, das pendelt, schwingt oder vibriert. ω ist die Kreisfrequenz." },
+    ]
+  },
+  {
+    day: 5, title: "Felder und ihre Energie (Klassische Feldtheorie)",
+    intro: "Jetzt kommen die Werkzeuge, mit denen man physikalische Systeme mathematisch aufschreibt.",
+    concepts: [
+      { name: "Die Lagrange-Funktion", formula: "L = T − V",
+        meaning: "Dynamik eines Systems: kinetische Energie T minus potentielle Energie V." },
+      { name: "Die Euler-Lagrange-Gleichung", formula: "∂L/∂x − d/dt(∂L/∂ẋ) = 0",
+        meaning: "Das Gesetz, nach dem sich die Natur bewegt (Prinzip der kleinsten Wirkung)." },
+      { name: "Das Gaußsche Gesetz", formula: "∇ · E⃗ = ρ/ε₀",
+        meaning: "Beschreibt, wie Ladungen ρ ein elektrisches Feld E⃗ im Raum aufbauen." },
+    ]
+  },
+  {
+    day: 6, title: "Das Verhalten von Potentialen",
+    intro: "Hier lernst du, wie Physiker mathematisch Täler bauen, in denen Teilchen stabil festsitzen.",
+    concepts: [
+      { name: "Das Coulomb-Potential", formula: "V(r) = (1/4πε₀) · q₁q₂/r",
+        meaning: "Zeigt, wie die Energie zwischen zwei Ladungen mit dem Abstand r abfällt." },
+      { name: "Das Lennard-Jones-Potential", formula: "V(r) = 4ε[(σ/r)¹² − (σ/r)⁶]",
+        meaning: "Der 1/r⁶-Term zieht Teilchen an, der 1/r¹²-Term stößt sie bei zu geringem Abstand stark ab." },
+      { name: "Die Kontinuitätsgleichung", formula: "∂ρ/∂t + ∇ · j⃗ = 0",
+        meaning: "Erhaltungssatz: ändert sich die Dichte ρ, muss ein Strom j⃗ fließen — Energie verschwindet nicht einfach." },
+    ]
+  },
+  {
+    day: 7, title: "Der Einstieg in die moderne Physik",
+    intro: "Am letzten Tag ein Blick auf die mathematischen Strukturen der Quantenwelt.",
+    concepts: [
+      { name: "Die Schrödinger-Gleichung (zeitunabhängig)", formula: "Ĥψ = Eψ",
+        meaning: "Fundament der Quantenmechanik — berechnet die Wellenfunktion ψ eines Teilchens im Energiesystem Ĥ." },
+      { name: "Die Planck-Einstein-Beziehung", formula: "E = h·ν",
+        meaning: "Verknüpft die Energie eines Photons direkt mit seiner Frequenz ν über h." },
+      { name: "Das Prinzip der Eichinvarianz", formula: "φ → φ' = φ + α",
+        meaning: "Die Beschreibung eines Feldes lässt sich verschieben, ohne dass sich die messbare Physik ändert — Ursprung aller Grundkräfte." },
+    ]
+  },
+];
+
+const lernplanDaySelect = document.getElementById('lernplanDaySelect');
+const lernplanIntro = document.getElementById('lernplanIntro');
+const lernplanConcepts = document.getElementById('lernplanConcepts');
+
+LEARNING_PLAN.forEach((d, i) => {
+  const opt = document.createElement('option');
+  opt.value = i;
+  opt.textContent = `Tag ${d.day}: ${d.title}`;
+  lernplanDaySelect.appendChild(opt);
+});
+
+function renderLearningDay(dayIndex) {
+  const d = LEARNING_PLAN[dayIndex];
+  lernplanIntro.textContent = d.intro;
+  lernplanConcepts.innerHTML = '';
+  d.concepts.forEach(c => {
+    const card = document.createElement('div');
+    card.className = 'concept-card';
+    card.innerHTML = `<div class="const-top"><span class="const-sym mono">${c.name}</span></div>
+      <div class="concept-formula mono">${c.formula}</div>
+      <div class="const-name">${c.meaning}</div>`;
+    lernplanConcepts.appendChild(card);
+  });
+}
+lernplanDaySelect.onchange = () => renderLearningDay(parseInt(lernplanDaySelect.value, 10));
+
+// ---------- Raumzeit-Krümmung ----------
+const curvatureMassInput = document.getElementById('curvatureMass');
+const curvatureErrorDiv = document.getElementById('curvatureError');
+const curvatureCanvas = document.getElementById('curvatureCanvas');
+const curvatureStatsDiv = document.getElementById('curvatureStats');
+
+function drawSpacetimeCurvature() {
+  curvatureErrorDiv.style.display = 'none';
+  let M;
+  try {
+    M = math.evaluate(curvatureMassInput.value);
+    if (!(M > 0)) throw new Error('Masse muss positiv sein');
+  } catch (e) {
+    curvatureErrorDiv.style.display = 'block';
+    curvatureErrorDiv.textContent = 'Fehler: ' + e.message;
+    return;
+  }
+  const G_ = SCOPE.G, c_ = SCOPE.c;
+  const rs = 2 * G_ * M / (c_ * c_);
+  const rOuter = rs * 12;
+  const n = 200;
+  const points = [];
+  for (let i = 0; i <= n; i++) {
+    const r = rs + (rOuter - rs) * i / n;
+    const z = 2 * Math.sqrt(rs * (r - rs));
+    points.push({ r, z });
+  }
+
+  fitCanvas(curvatureCanvas);
+  const ctx = curvatureCanvas.getContext('2d');
+  const W = curvatureCanvas.width, H = curvatureCanvas.height;
+  ctx.clearRect(0, 0, W, H);
+  const rMax = points[points.length - 1].r;
+  const zMax = points[points.length - 1].z;
+  const marginL = 60, marginB = 40, marginT = 20, marginR = 20;
+  const { plotW, plotH } = drawAxes(ctx, W, H, 0, rMax, 0, zMax, marginL, marginB, marginT, marginR);
+  function toPx(r) { return marginL + r / rMax * plotW; }
+  function toPy(z) { return marginT + (1 - z / zMax) * plotH; }
+  ctx.strokeStyle = '#6B5B95'; ctx.lineWidth = 3; ctx.beginPath();
+  points.forEach((p, i) => { const px = toPx(p.r), py = toPy(p.z); i === 0 ? ctx.moveTo(px, py) : ctx.lineTo(px, py); });
+  ctx.stroke();
+  // vertical guide at the Schwarzschild radius
+  ctx.strokeStyle = '#6B6575'; ctx.lineWidth = 1; ctx.setLineDash([4, 4]); ctx.beginPath();
+  ctx.moveTo(toPx(rs), marginT); ctx.lineTo(toPx(rs), marginT + plotH); ctx.stroke();
+  ctx.setLineDash([]);
+
+  curvatureStatsDiv.innerHTML = `Schwarzschild-Radius: <b>r_s = ${rs.toExponential(4)} m</b> &nbsp;|&nbsp; Flamm-Parabel z(r) = 2√(r_s(r−r_s)), dargestellt von r_s bis 12·r_s`;
+}
+document.getElementById('curvatureBtn').onclick = drawSpacetimeCurvature;
+
+// ---------- Aktuelle Wissenschaft ----------
+const sciTabArxiv = document.getElementById('sciTabArxiv');
+const sciTabWiki = document.getElementById('sciTabWiki');
+const sciArxivPanel = document.getElementById('sciArxivPanel');
+const sciWikiPanel = document.getElementById('sciWikiPanel');
+sciTabArxiv.onclick = () => { sciArxivPanel.style.display = 'block'; sciWikiPanel.style.display = 'none'; };
+sciTabWiki.onclick = () => { sciArxivPanel.style.display = 'none'; sciWikiPanel.style.display = 'block'; };
+
+const arxivQueryInput = document.getElementById('arxivQuery');
+const arxivErrorDiv = document.getElementById('arxivError');
+const arxivResultsDiv = document.getElementById('arxivResults');
+
+async function searchArxiv() {
+  const query = arxivQueryInput.value.trim();
+  arxivErrorDiv.style.display = 'none';
+  arxivResultsDiv.innerHTML = '';
+  if (!query) {
+    arxivErrorDiv.style.display = 'block';
+    arxivErrorDiv.textContent = 'Fehler: bitte einen Suchbegriff eingeben';
+    return;
+  }
+  const url = `https://export.arxiv.org/api/query?search_query=all:${encodeURIComponent(query)}&max_results=10`;
+  try {
+    const res = await fetch(url);
+    if (!res.ok) throw new Error('HTTP ' + res.status);
+    const text = await res.text();
+    const xml = new DOMParser().parseFromString(text, 'text/xml');
+    const entries = Array.from(xml.getElementsByTagName('entry'));
+    if (entries.length === 0) {
+      arxivResultsDiv.innerHTML = '<div class="sci-result-card">Keine Treffer gefunden.</div>';
+      return;
+    }
+    entries.forEach(entry => {
+      const title = entry.getElementsByTagName('title')[0]?.textContent.trim() || '(ohne Titel)';
+      const summary = entry.getElementsByTagName('summary')[0]?.textContent.trim().slice(0, 220) || '';
+      const link = entry.getElementsByTagName('id')[0]?.textContent.trim() || '#';
+      const authors = Array.from(entry.getElementsByTagName('author')).map(a => a.getElementsByTagName('name')[0]?.textContent).filter(Boolean).join(', ');
+      const card = document.createElement('div');
+      card.className = 'sci-result-card';
+      card.innerHTML = `<div class="const-sym mono">${title}</div>
+        <div class="const-name">${authors}</div>
+        <div class="const-name">${summary}…</div>
+        <a href="${link}" target="_blank" rel="noopener" class="mono">${link}</a>`;
+      arxivResultsDiv.appendChild(card);
+    });
+  } catch (e) {
+    arxivErrorDiv.style.display = 'block';
+    arxivErrorDiv.textContent = 'Fehler: arXiv-Suche fehlgeschlagen (' + e.message + '). Alternative: direkt auf arxiv.org suchen.';
+    const fallback = document.createElement('div');
+    fallback.className = 'sci-result-card';
+    fallback.innerHTML = `<a href="https://arxiv.org/abs/${encodeURIComponent(query)}" target="_blank" rel="noopener" class="mono">arxiv.org direkt durchsuchen ↗</a>`;
+    arxivResultsDiv.appendChild(fallback);
+  }
+}
+document.getElementById('arxivSearchBtn').onclick = searchArxiv;
+arxivQueryInput.addEventListener('keydown', e => { if (e.key === 'Enter') searchArxiv(); });
+
+const wikiQueryInput = document.getElementById('wikiQuery');
+const wikiErrorDiv = document.getElementById('wikiError');
+const wikiResultDiv = document.getElementById('wikiResult');
+
+async function searchWikipedia() {
+  const term = wikiQueryInput.value.trim();
+  wikiErrorDiv.style.display = 'none';
+  wikiResultDiv.innerHTML = '';
+  if (!term) {
+    wikiErrorDiv.style.display = 'block';
+    wikiErrorDiv.textContent = 'Fehler: bitte einen Begriff eingeben';
+    return;
+  }
+  const url = `https://de.wikipedia.org/api/rest_v1/page/summary/${encodeURIComponent(term)}`;
+  try {
+    const res = await fetch(url);
+    if (!res.ok) throw new Error('kein Artikel gefunden (HTTP ' + res.status + ')');
+    const data = await res.json();
+    const card = document.createElement('div');
+    card.className = 'sci-result-card';
+    card.innerHTML = `<div class="const-sym mono">${data.title || term}</div>
+      <div class="const-name">${data.extract || ''}</div>
+      <a href="${data.content_urls?.desktop?.page || ('https://de.wikipedia.org/wiki/' + encodeURIComponent(term))}" target="_blank" rel="noopener" class="mono">vollständigen Artikel öffnen ↗</a>`;
+    wikiResultDiv.appendChild(card);
+  } catch (e) {
+    wikiErrorDiv.style.display = 'block';
+    wikiErrorDiv.textContent = 'Fehler: ' + e.message;
+  }
+}
+document.getElementById('wikiSearchBtn').onclick = searchWikipedia;
+wikiQueryInput.addEventListener('keydown', e => { if (e.key === 'Enter') searchWikipedia(); });
+
 // init
 evaluate();
+renderFormulaCategory('mechanik');
 plot();
 buildParamInputs('pendel');
+renderPeriodicTable();
+renderLearningDay(0);
+drawSpacetimeCurvature();
 window.addEventListener('resize', () => { plot(); });
 </script>
 </body>
