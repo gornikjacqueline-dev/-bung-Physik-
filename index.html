@@ -20,7 +20,7 @@
 <style>
   @import url('https://fonts.googleapis.com/css2?family=Spectral:wght@400;600&family=Inter:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500;600&display=swap');
   * { box-sizing: border-box; }
-  body { margin:0; background:#EFEDF3; color:#211F29; font-family:'Inter',sans-serif; }
+  body { margin:0; background:#EFEDF3; color:#211F29; font-family:'Inter',sans-serif; padding-bottom:64px; }
   .display { font-family:'Spectral',serif; }
   .mono { font-family:'IBM Plex Mono',monospace; }
   header { border-bottom:1px solid #DCD7E6; padding:16px 20px; }
@@ -30,7 +30,14 @@
   .badge { font-size:11px; color:#8B7FC7; border:1px solid rgba(139,127,199,0.4); padding:3px 8px; border-radius:4px; }
   svg.trace { width:100%; height:28px; margin-top:8px; }
   .grid { display:grid; grid-template-columns:1fr; gap:1px; background:#DCD7E6; }
-  @media (min-width:1024px) { .grid { grid-template-columns:3fr 5fr 4fr; } }
+  @media (min-width:1024px) { .grid.grid2 { grid-template-columns:2fr 3fr; } }
+  .app-page { display:none; }
+  .app-page.active { display:block; }
+  .tabbar { position:fixed; bottom:0; left:0; right:0; display:flex; background:#F8F7FB; border-top:1px solid #DCD7E6; z-index:50; }
+  .tab-btn { flex:1; background:none; border:none; padding:8px 2px 6px; cursor:pointer; color:#6B6575; font-family:'IBM Plex Mono',monospace; display:flex; flex-direction:column; align-items:center; gap:2px; }
+  .tab-btn .tab-icon { font-size:18px; line-height:1; }
+  .tab-btn span:last-child { font-size:9.5px; text-align:center; line-height:1.15; }
+  .tab-btn.active { color:#8B7FC7; }
   .panel { background:#EFEDF3; padding:16px; }
   .panel h2 { font-size:17px; margin:0 0 8px; }
   .hint { color:#6B6575; font-size:11px; margin:0 0 12px; }
@@ -113,37 +120,52 @@
   </svg>
 </header>
 
-<div class="grid">
+<div class="app-page active" id="page-formeln">
+  <div class="grid grid2">
 
-  <div class="panel">
-    <h2 class="display">Naturkonstanten</h2>
-    <p class="hint mono">antippen fügt Symbol ein</p>
-    <div id="constList"></div>
-  </div>
-
-  <div class="panel">
-    <h2 class="display">Formel auswerten</h2>
-    <input type="text" id="formulaInput" class="mono" value="hbar * c / alpha" />
-    <button class="btn btn-primary" id="evalBtn">Auswerten</button>
-    <div class="readout mono" id="result">—</div>
-
-    <h2 class="display" style="margin-top:24px;">Formelsammlung</h2>
-    <p class="hint mono">kategorie wählen · status pro formel: etabliert · semiklassisch · unbestätigte kandidatentheorie</p>
-    <select id="formulaCatSelect"></select>
-    <div id="formulaTemplates" style="margin-top:8px;"></div>
-
-    <h2 class="display" style="margin-top:24px;">Funktionsplot f(x)</h2>
-    <input type="text" id="plotInput" class="mono" value="sin(x) * exp(-x/10)" />
-    <div class="row2">
-      <input type="number" id="xMin" class="mono" value="0" />
-      <input type="number" id="xMax" class="mono" value="20" />
+    <div class="panel">
+      <h2 class="display">Naturkonstanten</h2>
+      <p class="hint mono">antippen fügt Symbol ein</p>
+      <div id="constList"></div>
     </div>
-    <button class="btn btn-warn" id="plotBtn">Plotten</button>
-    <div class="readout err mono" id="plotError" style="display:none;"></div>
-    <div id="canvasWrap"><canvas id="plotCanvas"></canvas></div>
-  </div>
 
-  <div class="panel">
+    <div class="panel">
+      <h2 class="display">Formel auswerten</h2>
+      <input type="text" id="formulaInput" class="mono" value="hbar * c / alpha" />
+      <button class="btn btn-primary" id="evalBtn">Auswerten</button>
+      <div class="readout mono" id="result">—</div>
+
+      <h2 class="display" style="margin-top:24px;">Formelsammlung</h2>
+      <p class="hint mono">kategorie wählen · status pro formel: etabliert · semiklassisch · unbestätigte kandidatentheorie</p>
+      <select id="formulaCatSelect"></select>
+      <div id="formulaTemplates" style="margin-top:8px;"></div>
+
+      <h2 class="display" style="margin-top:24px;">Funktionsplot f(x)</h2>
+      <input type="text" id="plotInput" class="mono" value="sin(x) * exp(-x/10)" />
+      <div class="row2">
+        <input type="number" id="xMin" class="mono" value="0" />
+        <input type="number" id="xMax" class="mono" value="20" />
+      </div>
+      <button class="btn btn-warn" id="plotBtn">Plotten</button>
+      <div class="readout err mono" id="plotError" style="display:none;"></div>
+      <div id="canvasWrap"><canvas id="plotCanvas"></canvas></div>
+    </div>
+
+  </div>
+</div>
+
+<div class="app-page" id="page-perioden">
+  <div class="full-panel">
+    <h2 class="display">Periodensystem der Elemente</h2>
+    <p class="hint mono">antippen zeigt Details · horizontal scrollbar auf schmalen Bildschirmen</p>
+    <div class="ptable-wrap"><div class="ptable" id="ptable"></div></div>
+    <div class="pt-legend" id="ptLegend"></div>
+    <div class="pt-detail mono" id="ptDetail">— Element antippen für Details —</div>
+  </div>
+</div>
+
+<div class="app-page" id="page-experimente">
+  <div class="full-panel">
     <h2 class="display">Experiment-Simulation</h2>
     <p class="hint mono">reale Formeln + reale Fehlerquellen, keine erfundenen Werte</p>
     <select id="expSelect">
@@ -159,60 +181,73 @@
     <div class="stat-line" id="expStats"></div>
     <div class="note" id="expNote"></div>
   </div>
-
 </div>
 
-<div class="full-panel">
-  <h2 class="display">Periodensystem der Elemente</h2>
-  <p class="hint mono">antippen zeigt Details · horizontal scrollbar auf schmalen Bildschirmen</p>
-  <div class="ptable-wrap"><div class="ptable" id="ptable"></div></div>
-  <div class="pt-legend" id="ptLegend"></div>
-  <div class="pt-detail mono" id="ptDetail">— Element antippen für Details —</div>
-</div>
+<div class="app-page" id="page-lernplan">
+  <div class="full-panel">
+    <h2 class="display">7-Tage-Lernplan: Fundament der theoretischen Physik</h2>
+    <p class="hint mono">Ziel: die Symbole verstehen, keine Aufgaben rechnen — Tag für Tag</p>
+    <select id="lernplanDaySelect"></select>
+    <p class="note" id="lernplanIntro"></p>
+    <div id="lernplanConcepts"></div>
+  </div>
 
-<div class="full-panel">
-  <h2 class="display">7-Tage-Lernplan: Fundament der theoretischen Physik</h2>
-  <p class="hint mono">Ziel: die Symbole verstehen, keine Aufgaben rechnen — Tag für Tag</p>
-  <select id="lernplanDaySelect"></select>
-  <p class="note" id="lernplanIntro"></p>
-  <div id="lernplanConcepts"></div>
-</div>
-
-<div class="full-panel">
-  <h2 class="display">Raumzeit-Krümmung</h2>
-  <p class="hint mono">Flamm-Einbettungsdiagramm der Schwarzschild-Metrik (reale ART-Formel, kein Simulationswert erfunden)</p>
-  <div class="curve-controls">
-    <div>
-      <div class="field-label mono">Masse M (kg)</div>
-      <input type="text" id="curvatureMass" class="mono" value="1.989e30" />
+  <div class="full-panel">
+    <h2 class="display">Raumzeit-Krümmung</h2>
+    <p class="hint mono">Flamm-Einbettungsdiagramm der Schwarzschild-Metrik (reale ART-Formel, kein Simulationswert erfunden)</p>
+    <div class="curve-controls">
+      <div>
+        <div class="field-label mono">Masse M (kg)</div>
+        <input type="text" id="curvatureMass" class="mono" value="1.989e30" />
+      </div>
+      <button class="btn btn-primary" id="curvatureBtn">Krümmung berechnen</button>
     </div>
-    <button class="btn btn-primary" id="curvatureBtn">Krümmung berechnen</button>
+    <div class="readout err mono" id="curvatureError" style="display:none;"></div>
+    <div class="simCanvasWrap"><canvas id="curvatureCanvas"></canvas></div>
+    <div class="stat-line" id="curvatureStats"></div>
   </div>
-  <div class="readout err mono" id="curvatureError" style="display:none;"></div>
-  <div class="simCanvasWrap"><canvas id="curvatureCanvas"></canvas></div>
-  <div class="stat-line" id="curvatureStats"></div>
 </div>
 
-<div class="full-panel">
-  <h2 class="display">Aktuelle Wissenschaft</h2>
-  <p class="hint mono">echte Live-Suche · keine erfundenen Ergebnisse</p>
-  <div class="sci-tabs">
-    <button class="btn btn-primary sci-tab" id="sciTabArxiv">arXiv-Suche</button>
-    <button class="btn btn-warn sci-tab" id="sciTabWiki">Wikipedia</button>
-  </div>
-  <div id="sciArxivPanel">
-    <input type="text" id="arxivQuery" class="mono" placeholder="z.B. black hole entropy" />
-    <button class="btn btn-primary" id="arxivSearchBtn">arXiv durchsuchen</button>
-    <div class="readout err mono" id="arxivError" style="display:none;"></div>
-    <div id="arxivResults" style="margin-top:8px;"></div>
-  </div>
-  <div id="sciWikiPanel" style="display:none;">
-    <input type="text" id="wikiQuery" class="mono" placeholder="z.B. Photoeffekt" />
-    <button class="btn btn-warn" id="wikiSearchBtn">Wikipedia durchsuchen</button>
-    <div class="readout err mono" id="wikiError" style="display:none;"></div>
-    <div id="wikiResult" style="margin-top:8px;"></div>
+<div class="app-page" id="page-wissenschaft">
+  <div class="full-panel">
+    <h2 class="display">Aktuelle Wissenschaft</h2>
+    <p class="hint mono">echte Live-Suche · keine erfundenen Ergebnisse</p>
+    <div class="sci-tabs">
+      <button class="btn btn-primary sci-tab" id="sciTabArxiv">arXiv-Suche</button>
+      <button class="btn btn-warn sci-tab" id="sciTabWiki">Wikipedia</button>
+    </div>
+    <div id="sciArxivPanel">
+      <input type="text" id="arxivQuery" class="mono" placeholder="z.B. black hole entropy" />
+      <button class="btn btn-primary" id="arxivSearchBtn">arXiv durchsuchen</button>
+      <div class="readout err mono" id="arxivError" style="display:none;"></div>
+      <div id="arxivResults" style="margin-top:8px;"></div>
+    </div>
+    <div id="sciWikiPanel" style="display:none;">
+      <input type="text" id="wikiQuery" class="mono" placeholder="z.B. Photoeffekt" />
+      <button class="btn btn-warn" id="wikiSearchBtn">Wikipedia durchsuchen</button>
+      <div class="readout err mono" id="wikiError" style="display:none;"></div>
+      <div id="wikiResult" style="margin-top:8px;"></div>
+    </div>
   </div>
 </div>
+
+<nav class="tabbar" id="tabbar">
+  <button class="tab-btn active" data-page="page-formeln">
+    <span class="tab-icon">Σ</span><span>Formeln</span>
+  </button>
+  <button class="tab-btn" data-page="page-perioden">
+    <span class="tab-icon">☰</span><span>Perioden&shy;system</span>
+  </button>
+  <button class="tab-btn" data-page="page-experimente">
+    <span class="tab-icon">◐</span><span>Experi&shy;mente</span>
+  </button>
+  <button class="tab-btn" data-page="page-lernplan">
+    <span class="tab-icon">∇</span><span>Lernplan</span>
+  </button>
+  <button class="tab-btn" data-page="page-wissenschaft">
+    <span class="tab-icon">⌕</span><span>Wissen&shy;schaft</span>
+  </button>
+</nav>
 
 <script>
 // ---------- Constants ----------
@@ -1226,6 +1261,19 @@ async function searchWikipedia() {
 document.getElementById('wikiSearchBtn').onclick = searchWikipedia;
 wikiQueryInput.addEventListener('keydown', e => { if (e.key === 'Enter') searchWikipedia(); });
 
+// ---------- Tab navigation ----------
+const tabbar = document.getElementById('tabbar');
+function showPage(pageId) {
+  document.querySelectorAll('.app-page').forEach(p => p.classList.toggle('active', p.id === pageId));
+  document.querySelectorAll('.tab-btn').forEach(b => b.classList.toggle('active', b.dataset.page === pageId));
+  // canvases need a redraw once their page becomes visible (fitCanvas reads clientWidth, which is 0 while hidden)
+  if (pageId === 'page-formeln') plot();
+  if (pageId === 'page-lernplan') drawSpacetimeCurvature();
+}
+tabbar.querySelectorAll('.tab-btn').forEach(btn => {
+  btn.onclick = () => showPage(btn.dataset.page);
+});
+
 // init
 evaluate();
 renderFormulaCategory('mechanik');
@@ -1233,8 +1281,11 @@ plot();
 buildParamInputs('pendel');
 renderPeriodicTable();
 renderLearningDay(0);
-drawSpacetimeCurvature();
-window.addEventListener('resize', () => { plot(); });
+window.addEventListener('resize', () => {
+  const activePage = document.querySelector('.app-page.active');
+  if (activePage && activePage.id === 'page-formeln') plot();
+  if (activePage && activePage.id === 'page-lernplan') drawSpacetimeCurvature();
+});
 </script>
 </body>
 </html>
