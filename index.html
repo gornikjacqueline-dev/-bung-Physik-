@@ -50,7 +50,7 @@
   header p { margin:6px 0 0; color:var(--text-mut); font-size:12px; line-height:1.5; }
   .header-actions { display:flex; align-items:center; gap:8px; }
   .badge { font-size:11px; color:var(--accent); border:1px solid rgba(var(--accent-rgb),0.4); padding:3px 8px; border-radius:5px; }
-  .theme-toggle { font-size:16px; background:var(--card-bg); border:1px solid var(--border); border-radius:8px; padding:4px 8px; cursor:pointer; color:var(--text); line-height:1; transition:transform 0.12s ease, background 0.15s ease; }
+  .theme-toggle { font-size:16px; background:var(--card-bg); border:1px solid var(--border); border-radius:8px; padding:4px 8px; cursor:pointer; color:var(--text); line-height:1; transition:transform 0.12s cubic-bezier(0.34,1.56,0.64,1), background 0.15s ease; min-width:44px; min-height:44px; display:inline-flex; align-items:center; justify-content:center; }
   .theme-toggle:active { transform:scale(0.92); }
   svg.trace { width:100%; height:28px; margin-top:10px; }
   svg.trace polyline { stroke:var(--accent); }
@@ -58,19 +58,28 @@
   @media (min-width:1024px) { .grid.grid2 { grid-template-columns:2fr 3fr; } }
   .sticky-eval { position:sticky; top:0; z-index:40; background:var(--bg); padding:16px 18px 14px; border-bottom:1px solid var(--border); box-shadow:var(--shadow); }
   .sticky-eval h2 { font-size:16px; margin:0 0 8px; letter-spacing:0.01em; }
+  .card-stack { display:flex; align-items:flex-start; overflow-x:auto; scroll-snap-type:x mandatory; gap:12px; padding:4px 4px 10px; -webkit-overflow-scrolling:touch; scrollbar-width:none; }
+  .card-stack::-webkit-scrollbar { display:none; }
+  .card-stack > * { flex:0 0 84%; scroll-snap-align:center; margin-bottom:0; min-width:0; }
+  @media (min-width:520px) { .card-stack > * { flex-basis:46%; } }
+  .stack-indicator { text-align:center; font-size:11px; color:var(--text-mut); margin-top:-4px; }
   .app-page { display:none; }
   .app-page.active { display:block; animation: physlabFadeIn 0.35s ease; }
+  .app-page.active.slide-left { animation: slideInFromRight 0.35s cubic-bezier(0.34,1.56,0.64,1); }
+  .app-page.active.slide-right { animation: slideInFromLeft 0.35s cubic-bezier(0.34,1.56,0.64,1); }
   @keyframes physlabFadeIn { from { opacity:0; transform:translateY(8px); } to { opacity:1; transform:translateY(0); } }
+  @keyframes slideInFromRight { from { opacity:0; transform:translateX(26px); } to { opacity:1; transform:translateX(0); } }
+  @keyframes slideInFromLeft { from { opacity:0; transform:translateX(-26px); } to { opacity:1; transform:translateX(0); } }
   .tabbar { position:fixed; bottom:0; left:0; right:0; display:flex; background:var(--card-bg); border-top:1px solid var(--border); z-index:50; box-shadow:0 -2px 10px rgba(0,0,0,0.06); }
-  .tab-btn { flex:1; background:none; border:none; padding:9px 2px 7px; cursor:pointer; color:var(--text-mut); font-family:'IBM Plex Mono',monospace; display:flex; flex-direction:column; align-items:center; gap:3px; transition:color 0.15s ease, transform 0.12s ease; }
+  .tab-btn { flex:1; background:none; border:none; padding:9px 2px 7px; cursor:pointer; color:var(--text-mut); font-family:'IBM Plex Mono',monospace; display:flex; flex-direction:column; align-items:center; gap:3px; min-height:44px; transition:color 0.15s ease, transform 0.12s cubic-bezier(0.34,1.56,0.64,1); }
   .tab-btn:active { transform:scale(0.94); }
   .tab-btn .tab-icon { font-size:18px; line-height:1; }
   .tab-btn span:last-child { font-size:9.5px; text-align:center; line-height:1.15; }
   .tab-btn.active { color:var(--accent); }
-  .panel { background:var(--bg); padding:20px 18px; }
+  .panel { background:var(--bg); padding:20px 18px; min-width:0; }
   .panel h2, .full-panel h2 { font-size:20px; margin:0 0 10px; letter-spacing:0.01em; }
   .hint { color:var(--text-mut); font-size:11px; margin:0 0 16px; line-height:1.5; }
-  .const-btn { width:100%; text-align:left; background:var(--card-bg); border:1px solid var(--border-soft); border-radius:10px; padding:11px 14px; margin-bottom:9px; color:inherit; cursor:pointer; box-shadow:var(--shadow); transition:transform 0.12s ease, box-shadow 0.15s ease, background 0.15s ease; }
+  .const-btn { width:100%; text-align:left; background:var(--card-bg); border:1px solid var(--border-soft); border-radius:10px; padding:11px 14px; margin-bottom:9px; color:inherit; cursor:pointer; box-shadow:var(--shadow); min-height:44px; transition:transform 0.12s cubic-bezier(0.34,1.56,0.64,1), box-shadow 0.15s ease, background 0.15s ease; }
   .const-btn:hover { background:var(--hover-bg); }
   .const-btn:active { transform:scale(0.985); }
   .const-top { display:flex; justify-content:space-between; align-items:baseline; }
@@ -83,7 +92,7 @@
     padding:10px 13px; color:var(--text); font-size:14px; outline:none; transition:border-color 0.15s ease;
   }
   input:focus, select:focus { border-color:var(--accent); }
-  .btn { font-family:'IBM Plex Mono',monospace; font-size:12px; border:none; border-radius:8px; padding:10px 16px; cursor:pointer; margin-top:8px; transition:transform 0.1s ease, filter 0.15s ease; }
+  .btn { font-family:'IBM Plex Mono',monospace; font-size:12px; border:none; border-radius:8px; padding:10px 16px; cursor:pointer; margin-top:8px; min-height:44px; transition:transform 0.1s cubic-bezier(0.34,1.56,0.64,1), filter 0.15s ease; }
   .btn:active { transform:scale(0.96); filter:brightness(0.95); }
   .btn-primary { background:var(--accent); color:var(--card-bg); }
   .btn-warn { background:var(--accent-deep); color:var(--card-bg); }
@@ -123,10 +132,15 @@
   .pt-legend { display:flex; flex-wrap:wrap; gap:10px; font-size:11px; margin-top:12px; color:var(--text-soft); }
   .pt-legend span { display:inline-flex; align-items:center; gap:4px; }
   .pt-legend .dot { width:10px; height:10px; border-radius:3px; }
-  .pt-detail { margin-top:14px; background:var(--card-bg); border:1px solid var(--border); border-radius:10px; padding:14px; box-shadow:var(--shadow); }
   .pt-detail-row { display:flex; justify-content:space-between; font-size:12px; margin:4px 0; color:var(--text-soft); }
   .pt-detail-row b { color:var(--text); }
-  .concept-card { background:var(--card-bg); border:1px solid var(--border-soft); border-radius:10px; padding:11px 14px; margin-bottom:9px; box-shadow:var(--shadow); transition:transform 0.12s ease, box-shadow 0.15s ease; }
+  .sheet-backdrop { position:fixed; inset:0; background:rgba(0,0,0,0.4); opacity:0; pointer-events:none; transition:opacity 0.25s ease; z-index:44; }
+  .sheet-backdrop.open { opacity:1; pointer-events:auto; }
+  .bottom-sheet { position:fixed; left:0; right:0; bottom:0; background:var(--card-bg); border-top:1px solid var(--border); border-radius:16px 16px 0 0; padding:18px 18px calc(18px + 68px); box-shadow:0 -4px 20px rgba(0,0,0,0.18); transform:translateY(100%); transition:transform 0.32s cubic-bezier(0.34,1.56,0.64,1); z-index:45; max-height:70vh; overflow-y:auto; }
+  .bottom-sheet.open { transform:translateY(0); }
+  .bottom-sheet .pt-detail { margin-top:8px; }
+  .sheet-close { position:absolute; top:8px; right:10px; background:none; border:none; font-size:16px; color:var(--text-mut); cursor:pointer; padding:8px; min-width:44px; min-height:44px; }
+  .concept-card { background:var(--card-bg); border:1px solid var(--border-soft); border-radius:10px; padding:11px 14px; margin-bottom:9px; box-shadow:var(--shadow); min-height:44px; transition:transform 0.12s cubic-bezier(0.34,1.56,0.64,1), box-shadow 0.15s ease; }
   .concept-card:active { transform:scale(0.985); }
   .concept-card .const-top { display:flex; flex-wrap:wrap; justify-content:space-between; align-items:baseline; gap:4px 10px; }
   .concept-formula { color:var(--accent-deep); font-size:13px; margin:6px 0; }
@@ -195,15 +209,17 @@
 
     <div class="panel">
       <h2 class="display">Naturkonstanten</h2>
-      <p class="hint mono">antippen fügt Symbol ein</p>
-      <div id="constList"></div>
+      <p class="hint mono">wischen zum Durchblättern · antippen fügt Symbol ein</p>
+      <div id="constList" class="card-stack"></div>
+      <div class="stack-indicator mono" id="constStackIndicator"></div>
     </div>
 
     <div class="panel">
       <h2 class="display">Formelsammlung</h2>
-      <p class="hint mono">kategorie wählen · status pro formel: etabliert · semiklassisch · unbestätigte kandidatentheorie</p>
+      <p class="hint mono">kategorie wählen · wischen zum Durchblättern · status: etabliert · semiklassisch · unbestätigte kandidatentheorie</p>
       <select id="formulaCatSelect"></select>
-      <div id="formulaTemplates" style="margin-top:8px;"></div>
+      <div id="formulaTemplates" class="card-stack" style="margin-top:8px;"></div>
+      <div class="stack-indicator mono" id="formulaStackIndicator"></div>
 
       <h2 class="display" style="margin-top:24px;">Funktionsplot f(x)</h2>
       <input type="text" id="plotInput" class="mono" value="sin(x) * exp(-x/10)" />
@@ -225,7 +241,12 @@
     <p class="hint mono">antippen zeigt Details · horizontal scrollbar auf schmalen Bildschirmen</p>
     <div class="ptable-wrap"><div class="ptable" id="ptable"></div></div>
     <div class="pt-legend" id="ptLegend"></div>
-    <div class="pt-detail mono" id="ptDetail">— Element antippen für Details —</div>
+  </div>
+
+  <div class="sheet-backdrop" id="ptSheetBackdrop"></div>
+  <div class="bottom-sheet" id="ptSheet">
+    <button class="sheet-close" id="ptSheetClose" aria-label="Schließen">✕</button>
+    <div class="pt-detail mono" id="ptDetail"></div>
   </div>
 </div>
 
@@ -344,6 +365,22 @@ const CONSTANTS = [
 const SCOPE = {};
 CONSTANTS.forEach(c => SCOPE[c.sym] = c.val);
 
+// ---------- Card-stack indicator ----------
+function updateStackIndicator(stackEl, indicatorEl) {
+  const cards = stackEl.children;
+  if (!cards.length) { indicatorEl.textContent = ''; return; }
+  const cardWidth = cards[0].getBoundingClientRect().width + 12;
+  const idx = cardWidth ? Math.round(stackEl.scrollLeft / cardWidth) : 0;
+  indicatorEl.textContent = `${Math.min(idx + 1, cards.length)} / ${cards.length}`;
+}
+function attachStackIndicator(stackEl, indicatorEl) {
+  if (!stackEl.dataset.stackBound) {
+    stackEl.dataset.stackBound = '1';
+    stackEl.addEventListener('scroll', () => updateStackIndicator(stackEl, indicatorEl));
+  }
+  updateStackIndicator(stackEl, indicatorEl);
+}
+
 const constList = document.getElementById('constList');
 CONSTANTS.forEach(c => {
   const card = document.createElement('div');
@@ -360,6 +397,7 @@ CONSTANTS.forEach(c => {
   };
   constList.appendChild(card);
 });
+attachStackIndicator(constList, document.getElementById('constStackIndicator'));
 
 // ---------- Formula ----------
 const formulaInput = document.getElementById('formulaInput');
@@ -621,6 +659,8 @@ function renderFormulaCategory(key) {
     };
     formulaTemplatesDiv.appendChild(card);
   });
+  formulaTemplatesDiv.scrollLeft = 0;
+  attachStackIndicator(formulaTemplatesDiv, document.getElementById('formulaStackIndicator'));
 }
 formulaCatSelect.onchange = () => renderFormulaCategory(formulaCatSelect.value);
 
@@ -1051,6 +1091,14 @@ const CATEGORY_LABELS = {
 const ptableDiv = document.getElementById('ptable');
 const ptLegendDiv = document.getElementById('ptLegend');
 const ptDetailDiv = document.getElementById('ptDetail');
+const ptSheet = document.getElementById('ptSheet');
+const ptSheetBackdrop = document.getElementById('ptSheetBackdrop');
+function closePtSheet() {
+  ptSheet.classList.remove('open');
+  ptSheetBackdrop.classList.remove('open');
+}
+document.getElementById('ptSheetClose').onclick = closePtSheet;
+ptSheetBackdrop.onclick = closePtSheet;
 
 function renderPeriodicTable() {
   ptableDiv.innerHTML = '';
@@ -1086,6 +1134,8 @@ function showElementDetail(el) {
     <div class="pt-detail-row"><span>Schmelzpunkt</span><b>${mpText}</b></div>
     <div class="pt-detail-row"><span>Kategorie</span><b>${CATEGORY_LABELS[el.cat]}</b></div>
   `;
+  ptSheet.classList.add('open');
+  ptSheetBackdrop.classList.add('open');
 }
 
 // ---------- 7-Tage-Lernplan ----------
@@ -1590,8 +1640,16 @@ function answerDailyChallenge(selectedIndex, btnEl, q) {
 
 // ---------- Tab navigation ----------
 const tabbar = document.getElementById('tabbar');
-function showPage(pageId) {
-  document.querySelectorAll('.app-page').forEach(p => p.classList.toggle('active', p.id === pageId));
+const TAB_ORDER = Array.from(tabbar.querySelectorAll('.tab-btn')).map(b => b.dataset.page);
+// direction 'left' = moving forward through TAB_ORDER, new page enters from the right;
+// direction 'right' = moving backward, new page enters from the left
+function showPage(pageId, direction) {
+  if (pageId !== 'page-perioden') closePtSheet();
+  document.querySelectorAll('.app-page').forEach(p => {
+    p.classList.remove('slide-left', 'slide-right');
+    if (p.id === pageId && direction) p.classList.add(direction === 'left' ? 'slide-left' : 'slide-right');
+    p.classList.toggle('active', p.id === pageId);
+  });
   document.querySelectorAll('.tab-btn').forEach(b => b.classList.toggle('active', b.dataset.page === pageId));
   // canvases need a redraw once their page becomes visible (fitCanvas reads clientWidth, which is 0 while hidden)
   if (pageId === 'page-formeln') plot();
@@ -1599,8 +1657,33 @@ function showPage(pageId) {
   if (pageId === 'page-quiz') renderDailyChallenge();
 }
 tabbar.querySelectorAll('.tab-btn').forEach(btn => {
-  btn.onclick = () => showPage(btn.dataset.page);
+  btn.onclick = () => {
+    const curIdx = TAB_ORDER.indexOf(document.querySelector('.app-page.active').id);
+    const newIdx = TAB_ORDER.indexOf(btn.dataset.page);
+    if (newIdx === curIdx) return;
+    showPage(btn.dataset.page, newIdx > curIdx ? 'left' : 'right');
+  };
 });
+
+// ---------- Swipe navigation ----------
+let touchStartX = 0, touchStartY = 0, touchStartEl = null;
+document.addEventListener('touchstart', e => {
+  const t = e.touches[0];
+  touchStartX = t.clientX;
+  touchStartY = t.clientY;
+  touchStartEl = e.target;
+}, { passive: true });
+document.addEventListener('touchend', e => {
+  if (touchStartEl && touchStartEl.closest && touchStartEl.closest('.ptable-wrap, .card-stack')) return;
+  const t = e.changedTouches[0];
+  const dx = t.clientX - touchStartX;
+  const dy = t.clientY - touchStartY;
+  if (Math.abs(dx) < 70 || Math.abs(dx) < Math.abs(dy) * 1.8) return;
+  const curIdx = TAB_ORDER.indexOf(document.querySelector('.app-page.active').id);
+  const newIdx = curIdx + (dx < 0 ? 1 : -1);
+  if (newIdx < 0 || newIdx >= TAB_ORDER.length) return;
+  showPage(TAB_ORDER[newIdx], dx < 0 ? 'left' : 'right');
+}, { passive: true });
 
 // ---------- Theme toggle ----------
 const themeToggleBtn = document.getElementById('themeToggleBtn');
