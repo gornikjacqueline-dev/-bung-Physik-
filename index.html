@@ -127,6 +127,20 @@
   .sci-tab { flex:1; }
   .sci-result-card { background:var(--card-bg); border:1px solid var(--border-soft); border-radius:6px; padding:8px 12px; margin-bottom:6px; }
   .sci-result-card a { color:var(--accent-deep); }
+  .concept-card { cursor:pointer; }
+  .concept-card .concept-formula, .concept-card .const-name { display:none; }
+  .concept-card.revealed .concept-formula, .concept-card.revealed .const-name { display:block; }
+  .concept-card .flip-hint { font-size:10px; color:var(--text-mut); }
+  .concept-card.revealed .flip-hint { display:none; }
+  .quiz-progress { font-size:11px; color:var(--text-mut); margin-bottom:8px; }
+  .quiz-question { font-size:15px; margin-bottom:12px; }
+  .quiz-option { width:100%; text-align:left; background:var(--card-bg); border:1px solid var(--border-soft); border-radius:6px; padding:10px 12px; margin-bottom:6px; cursor:pointer; color:inherit; font-family:'Inter',sans-serif; font-size:13px; }
+  .quiz-option:hover:not(:disabled) { background:var(--hover-bg); }
+  .quiz-option:disabled { cursor:default; }
+  .quiz-option.correct { background:rgba(var(--accent-rgb),0.25); border-color:var(--accent); color:var(--text); }
+  .quiz-option.incorrect { background:rgba(255,107,82,0.2); border-color:var(--error); color:var(--text); }
+  .quiz-explanation { font-size:12px; color:var(--text-soft); margin:8px 0; line-height:1.5; }
+  .quiz-score { font-size:24px; color:var(--accent); margin:12px 0; }
 </style>
 </head>
 <body>
@@ -258,6 +272,22 @@
   </div>
 </div>
 
+<div class="app-page" id="page-quiz">
+  <div class="full-panel">
+    <h2 class="display">Tägliche Challenge</h2>
+    <p class="hint mono" id="dailyStreakHint">🔥 0 Tage in Folge</p>
+    <div id="dailyChallengeBox"></div>
+  </div>
+
+  <div class="full-panel">
+    <h2 class="display">Quiz</h2>
+    <p class="hint mono">Naturkonstanten, Formeln, Periodensystem &amp; Physik-Konzepte</p>
+    <div id="quizBox">
+      <button class="btn btn-primary" id="quizStartBtn">Quiz starten (10 Fragen)</button>
+    </div>
+  </div>
+</div>
+
 <nav class="tabbar" id="tabbar">
   <button class="tab-btn active" data-page="page-formeln">
     <span class="tab-icon">Σ</span><span>Formeln</span>
@@ -273,6 +303,9 @@
   </button>
   <button class="tab-btn" data-page="page-wissenschaft">
     <span class="tab-icon">⌕</span><span>Wissen&shy;schaft</span>
+  </button>
+  <button class="tab-btn" data-page="page-quiz">
+    <span class="tab-icon">?</span><span>Quiz</span>
   </button>
 </nav>
 
@@ -1145,9 +1178,10 @@ function renderLearningDay(dayIndex) {
   d.concepts.forEach(c => {
     const card = document.createElement('div');
     card.className = 'concept-card';
-    card.innerHTML = `<div class="const-top"><span class="const-sym mono">${c.name}</span></div>
+    card.innerHTML = `<div class="const-top"><span class="const-sym mono">${c.name}</span><span class="flip-hint mono">antippen ↴</span></div>
       <div class="concept-formula mono">${c.formula}</div>
       <div class="const-name">${c.meaning}</div>`;
+    card.onclick = () => card.classList.toggle('revealed');
     lernplanConcepts.appendChild(card);
   });
 }
@@ -1292,6 +1326,222 @@ async function searchWikipedia() {
 document.getElementById('wikiSearchBtn').onclick = searchWikipedia;
 wikiQueryInput.addEventListener('keydown', e => { if (e.key === 'Enter') searchWikipedia(); });
 
+// ---------- Quiz & Tägliche Challenge ----------
+const QUIZ_QUESTIONS = [
+  { question: "Wie groß ist die Lichtgeschwindigkeit im Vakuum (gerundet)?",
+    options: ["2,998 × 10⁸ m/s", "3,998 × 10⁸ m/s", "2,998 × 10⁶ m/s", "9,998 × 10⁸ m/s"],
+    correctIndex: 0, explanation: "c = 299.792.458 m/s ist im SI-System exakt definiert." },
+  { question: "Welches Symbol steht für die Boltzmann-Konstante?",
+    options: ["kB", "h", "NA", "σ"],
+    correctIndex: 0, explanation: "kB verknüpft Temperatur mit Energie auf Teilchenebene." },
+  { question: "Was beschreibt die Feinstrukturkonstante α?",
+    options: ["Stärke der elektromagnetischen Wechselwirkung", "Stärke der Gravitation", "Zerfallsrate radioaktiver Kerne", "Lichtgeschwindigkeit im Medium"],
+    correctIndex: 0, explanation: "α ≈ 1/137 ist eine dimensionslose Kopplungskonstante der Quantenelektrodynamik." },
+  { question: "Welche Einheit hat die Gravitationskonstante G?",
+    options: ["m³/(kg·s²)", "J/K", "C", "1/mol"],
+    correctIndex: 0, explanation: "Diese Einheit ergibt sich aus F = Gm₁m₂/r²." },
+  { question: "Welche Formel beschreibt die kinetische Energie?",
+    options: ["E = ½mv²", "E = mc²", "E = hf", "E = mgh"],
+    correctIndex: 0, explanation: "E = ½mv² ist die klassische Bewegungsenergie." },
+  { question: "Wofür steht die Formel E = mc²?",
+    options: ["Masse-Energie-Äquivalenz (Einstein, SRT)", "Photonenenergie (Planck)", "Kinetische Energie (Newton)", "Gravitationspotential"],
+    correctIndex: 0, explanation: "Masse und Energie sind nach der Speziellen Relativitätstheorie äquivalent." },
+  { question: "Wie lautet das Coulomb-Gesetz für die Kraft zwischen zwei Ladungen?",
+    options: ["F = q₁q₂/(4πε₀r²)", "F = Gm₁m₂/r²", "F = qvB", "F = ma"],
+    correctIndex: 0, explanation: "Das Coulomb-Gesetz beschreibt die Kraft zwischen zwei Punktladungen." },
+  { question: "Welche Formel gehört zum idealen Gasgesetz?",
+    options: ["pV = nRT", "E = ½kx²", "F = ma", "λ = h/(mv)"],
+    correctIndex: 0, explanation: "pV = nRT verknüpft Druck, Volumen, Stoffmenge und Temperatur." },
+  { question: "Was besagt der Lorentzfaktor γ = 1/√(1−v²/c²)?",
+    options: ["Wie stark Zeit/Länge bei hohen Geschwindigkeiten relativistisch verzerrt werden", "Das Verhältnis von Masse zu Energie", "Die Wellenlänge eines Photons", "Den Wirkungsgrad einer Wärmekraftmaschine"],
+    correctIndex: 0, explanation: "γ bestimmt Zeitdilatation, Längenkontraktion und relativistischen Impuls." },
+  { question: "Wie lautet das 3. Keplersche Gesetz sinngemäß?",
+    options: ["Das Quadrat der Umlaufzeit ist proportional zur dritten Potenz der großen Halbachse", "Die überstrichene Fläche pro Zeit ist konstant", "Planetenbahnen sind exakte Kreise", "Die Umlaufzeit ist proportional zur Sonnenmasse"],
+    correctIndex: 0, explanation: "T² ∝ a³ — daraus folgt z.B. die Erdumlaufzeit von rund einem Jahr." },
+  { question: "Welches chemische Element hat die Ordnungszahl 1?",
+    options: ["Wasserstoff (H)", "Helium (He)", "Lithium (Li)", "Kohlenstoff (C)"],
+    correctIndex: 0, explanation: "Wasserstoff hat ein Proton im Kern und steht daher an Position 1." },
+  { question: "Zu welcher Kategorie gehören Elemente wie Helium und Neon?",
+    options: ["Edelgase", "Alkalimetalle", "Halogene", "Übergangsmetalle"],
+    correctIndex: 0, explanation: "Edelgase haben volle Elektronenschalen und reagieren kaum." },
+  { question: "Welches Element hat das Symbol 'Fe'?",
+    options: ["Eisen", "Fluor", "Francium", "Fermium"],
+    correctIndex: 0, explanation: "Fe kommt vom lateinischen 'ferrum' für Eisen." },
+  { question: "Wie viele Elemente umfasst das aktuelle Periodensystem (Stand Ordnungszahl 118)?",
+    options: ["118", "92", "103", "150"],
+    correctIndex: 0, explanation: "Von Wasserstoff (Z=1) bis Oganesson (Z=118)." },
+  { question: "Zu welcher Elementkategorie gehört Uran?",
+    options: ["Actinoid", "Lanthanoid", "Übergangsmetall", "Alkalimetall"],
+    correctIndex: 0, explanation: "Uran (Z=92) gehört zur Actinoiden-Reihe." },
+  { question: "Was besagt die Heisenbergsche Unschärferelation sinngemäß?",
+    options: ["Ort und Impuls eines Teilchens können nicht gleichzeitig beliebig genau bekannt sein", "Energie kann nicht erzeugt oder vernichtet werden", "Licht verhält sich immer wie eine Welle", "Masse und Energie sind äquivalent"],
+    correctIndex: 0, explanation: "Ein Grundprinzip der Quantenmechanik: Δx·Δp ≥ ħ/2." },
+  { question: "Was beschreibt der Schwarzschild-Radius eines Schwarzen Lochs?",
+    options: ["Den Radius, innerhalb dessen nicht einmal Licht entkommen kann", "Den Radius der Photonensphäre", "Den Radius des Ereignishorizonts eines weißen Zwergs", "Den Umfang der Akkretionsscheibe"],
+    correctIndex: 0, explanation: "Der Schwarzschild-Radius definiert den Ereignishorizont eines nicht-rotierenden Schwarzen Lochs." },
+  { question: "Wodurch entsteht Hawking-Strahlung (theoretisch)?",
+    options: ["Quanteneffekte nahe des Ereignishorizonts eines Schwarzen Lochs", "Kernfusion im Inneren eines Sterns", "Beschleunigung geladener Teilchen im Magnetfeld", "Radioaktiver Zerfall instabiler Kerne"],
+    correctIndex: 0, explanation: "Hawking sagte 1975 diese Strahlung aus Quantenfeldtheorie auf gekrümmter Raumzeit voraus." },
+  { question: "Was ist das Hauptmerkmal der Poisson-Statistik bei radioaktivem Zerfall?",
+    options: ["Der Fehler einer Zählung ist ungefähr √N", "Der Fehler ist immer konstant, unabhängig von N", "Es gibt keinen messbaren Fehler", "Der Fehler nimmt mit der Zeit ab"],
+    correctIndex: 0, explanation: "Zählprozesse folgen der Poisson-Verteilung — Standardphysik der Teilchenzählstatistik." },
+  { question: "Was zeigt das Doppelspalt-Experiment?",
+    options: ["Wellen-Teilchen-Dualismus von Licht/Materie", "Dass Licht sich nur wie ein Teilchen verhält", "Die Existenz von Schwarzen Löchern", "Die Ausdehnung des Universums"],
+    correctIndex: 0, explanation: "Interferenzmuster zeigen Wellenverhalten, einzelne Treffer zeigen Teilchenverhalten." },
+  { question: "Wonach ist die Planck-Länge definiert?",
+    options: ["Die Skala, ab der Quanteneffekte der Raumzeit erwartet werden", "Die Wellenlänge sichtbaren Lichts", "Der Durchmesser eines Wasserstoffatoms", "Die Reichweite der starken Kernkraft"],
+    correctIndex: 0, explanation: "lP = √(ħG/c³) — jenseits dieser Skala versagt die klassische Raumzeit-Beschreibung." },
+  { question: "Was besagt das Hubble-Gesetz?",
+    options: ["Weiter entfernte Galaxien entfernen sich schneller von uns", "Sterne mit mehr Masse leben länger", "Licht wird von Materie immer abgelenkt", "Die Temperatur des Universums steigt mit der Zeit"],
+    correctIndex: 0, explanation: "v = H₀d — Grundlage für das expandierende Universum." },
+  { question: "Welche Aussage zur Loop-Quantengravitation (LQG) ist korrekt?",
+    options: ["Sie ist eine unbestätigte Kandidatentheorie der Quantengravitation", "Sie ist experimentell vollständig bestätigt", "Sie ersetzt die Allgemeine Relativitätstheorie vollständig", "Sie wurde von Einstein entwickelt"],
+    correctIndex: 0, explanation: "LQG sagt diskrete Flächenspektren voraus, ist aber bislang nicht experimentell bestätigt." },
+];
+
+function shuffleArray(arr) {
+  const a = arr.slice();
+  for (let i = a.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [a[i], a[j]] = [a[j], a[i]];
+  }
+  return a;
+}
+
+const quizBox = document.getElementById('quizBox');
+const quizStartBtn = document.getElementById('quizStartBtn');
+let quizState = null;
+
+function startQuiz() {
+  quizState = { questions: shuffleArray(QUIZ_QUESTIONS).slice(0, 10), index: 0, score: 0 };
+  renderQuizQuestion();
+}
+quizStartBtn.onclick = startQuiz;
+
+function renderQuizQuestion() {
+  const q = quizState.questions[quizState.index];
+  const optionOrder = shuffleArray(q.options.map((opt, i) => ({ opt, i })));
+  quizBox.innerHTML = `
+    <div class="quiz-progress mono">Frage ${quizState.index + 1} von ${quizState.questions.length} · Punkte: ${quizState.score}</div>
+    <div class="quiz-question">${q.question}</div>
+    <div id="quizOptions"></div>
+  `;
+  const optionsDiv = document.getElementById('quizOptions');
+  optionOrder.forEach(({ opt, i }) => {
+    const btn = document.createElement('button');
+    btn.className = 'quiz-option mono';
+    btn.textContent = opt;
+    btn.onclick = () => answerQuiz(i, btn);
+    optionsDiv.appendChild(btn);
+  });
+}
+
+function answerQuiz(selectedIndex, btnEl) {
+  const q = quizState.questions[quizState.index];
+  const correct = selectedIndex === q.correctIndex;
+  if (correct) quizState.score++;
+  document.querySelectorAll('.quiz-option').forEach(b => b.disabled = true);
+  btnEl.classList.add(correct ? 'correct' : 'incorrect');
+  if (!correct) {
+    const correctBtn = Array.from(document.querySelectorAll('.quiz-option')).find(b => b.textContent === q.options[q.correctIndex]);
+    if (correctBtn) correctBtn.classList.add('correct');
+  }
+  const explDiv = document.createElement('div');
+  explDiv.className = 'quiz-explanation';
+  explDiv.textContent = q.explanation;
+  document.getElementById('quizOptions').appendChild(explDiv);
+
+  const nextBtn = document.createElement('button');
+  nextBtn.className = 'btn btn-primary';
+  nextBtn.textContent = quizState.index + 1 < quizState.questions.length ? 'Nächste Frage' : 'Ergebnis anzeigen';
+  nextBtn.onclick = () => {
+    quizState.index++;
+    if (quizState.index < quizState.questions.length) renderQuizQuestion();
+    else showQuizResult();
+  };
+  document.getElementById('quizOptions').appendChild(nextBtn);
+}
+
+function showQuizResult() {
+  quizBox.innerHTML = `
+    <div class="quiz-score mono">${quizState.score} von ${quizState.questions.length} richtig</div>
+    <button class="btn btn-primary" id="quizRestartBtn">Neu starten</button>
+  `;
+  document.getElementById('quizRestartBtn').onclick = startQuiz;
+}
+
+// ---------- Tägliche Challenge ----------
+const dailyStreakHint = document.getElementById('dailyStreakHint');
+const dailyChallengeBox = document.getElementById('dailyChallengeBox');
+
+function todayKey() {
+  return new Date().toISOString().slice(0, 10);
+}
+function yesterdayKey() {
+  const d = new Date();
+  d.setUTCDate(d.getUTCDate() - 1);
+  return d.toISOString().slice(0, 10);
+}
+function getStreak() {
+  return parseInt(localStorage.getItem('physlab-streak-count') || '0', 10);
+}
+function getLastDate() {
+  return localStorage.getItem('physlab-streak-lastdate') || '';
+}
+function updateStreak() {
+  const last = getLastDate();
+  let streak = getStreak();
+  if (last === todayKey()) {
+    // already done today, no change
+  } else if (last === yesterdayKey()) {
+    streak++;
+  } else {
+    streak = 1;
+  }
+  localStorage.setItem('physlab-streak-count', String(streak));
+  localStorage.setItem('physlab-streak-lastdate', todayKey());
+  dailyStreakHint.textContent = `🔥 ${streak} Tag${streak === 1 ? '' : 'e'} in Folge`;
+}
+
+function renderDailyChallenge() {
+  dailyStreakHint.textContent = `🔥 ${getStreak()} Tag${getStreak() === 1 ? '' : 'e'} in Folge`;
+  const dayIndex = Math.floor(Date.now() / 86400000) % QUIZ_QUESTIONS.length;
+  const q = QUIZ_QUESTIONS[dayIndex];
+  const doneToday = getLastDate() === todayKey();
+
+  if (doneToday) {
+    dailyChallengeBox.innerHTML = `<div class="quiz-question">${q.question}</div>
+      <div class="quiz-explanation">✓ Heute schon erledigt — richtige Antwort: <b>${q.options[q.correctIndex]}</b></div>`;
+    return;
+  }
+
+  dailyChallengeBox.innerHTML = `<div class="quiz-question">${q.question}</div><div id="dailyOptions"></div>`;
+  const optionsDiv = document.getElementById('dailyOptions');
+  const optionOrder = shuffleArray(q.options.map((opt, i) => ({ opt, i })));
+  optionOrder.forEach(({ opt, i }) => {
+    const btn = document.createElement('button');
+    btn.className = 'quiz-option mono';
+    btn.textContent = opt;
+    btn.onclick = () => answerDailyChallenge(i, btn, q);
+    optionsDiv.appendChild(btn);
+  });
+}
+
+function answerDailyChallenge(selectedIndex, btnEl, q) {
+  const correct = selectedIndex === q.correctIndex;
+  document.querySelectorAll('#dailyOptions .quiz-option').forEach(b => b.disabled = true);
+  btnEl.classList.add(correct ? 'correct' : 'incorrect');
+  if (!correct) {
+    const correctBtn = Array.from(document.querySelectorAll('#dailyOptions .quiz-option')).find(b => b.textContent === q.options[q.correctIndex]);
+    if (correctBtn) correctBtn.classList.add('correct');
+  }
+  const explDiv = document.createElement('div');
+  explDiv.className = 'quiz-explanation';
+  explDiv.textContent = q.explanation;
+  document.getElementById('dailyOptions').appendChild(explDiv);
+  updateStreak();
+}
+
 // ---------- Tab navigation ----------
 const tabbar = document.getElementById('tabbar');
 function showPage(pageId) {
@@ -1300,6 +1550,7 @@ function showPage(pageId) {
   // canvases need a redraw once their page becomes visible (fitCanvas reads clientWidth, which is 0 while hidden)
   if (pageId === 'page-formeln') plot();
   if (pageId === 'page-lernplan') drawSpacetimeCurvature();
+  if (pageId === 'page-quiz') renderDailyChallenge();
 }
 tabbar.querySelectorAll('.tab-btn').forEach(btn => {
   btn.onclick = () => showPage(btn.dataset.page);
