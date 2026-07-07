@@ -117,15 +117,18 @@
   .pt-detail-row { display:flex; justify-content:space-between; font-size:12px; margin:3px 0; color:var(--text-soft); }
   .pt-detail-row b { color:var(--text); }
   .concept-card { background:var(--card-bg); border:1px solid var(--border-soft); border-radius:6px; padding:8px 12px; margin-bottom:6px; }
-  .concept-card .const-top { display:flex; justify-content:space-between; align-items:baseline; }
+  .concept-card .const-top { display:flex; flex-wrap:wrap; justify-content:space-between; align-items:baseline; gap:4px 10px; }
   .concept-formula { color:var(--accent-deep); font-size:13px; margin:4px 0; }
+  .exercise-steps { font-size:12px; color:var(--text-soft); margin:6px 0 0; padding-left:16px; line-height:1.6; }
   .curve-controls { display:flex; gap:8px; align-items:flex-end; margin-bottom:8px; }
   .curve-controls > div { flex:1; }
   .sci-result-card { background:var(--card-bg); border:1px solid var(--border-soft); border-radius:6px; padding:8px 12px; margin-bottom:6px; }
   .sci-result-card a { color:var(--accent-deep); }
   .concept-card { cursor:pointer; }
-  .concept-card .concept-formula, .concept-card .const-name { display:none; }
+  .concept-card .concept-formula, .concept-card .const-name, .concept-card .formula-load-btn, .concept-card .exercise-steps { display:none; }
   .concept-card.revealed .concept-formula, .concept-card.revealed .const-name { display:block; }
+  .concept-card.revealed .exercise-steps { display:block; }
+  .concept-card.revealed .formula-load-btn { display:inline-block; }
   .concept-card .flip-hint { font-size:10px; color:var(--text-mut); }
   .concept-card.revealed .flip-hint { display:none; }
   .quiz-progress { font-size:11px; color:var(--text-mut); margin-bottom:8px; }
@@ -224,7 +227,7 @@
 <div class="app-page" id="page-lernplan">
   <div class="full-panel">
     <h2 class="display">7-Tage-Lernplan: Fundament der theoretischen Physik</h2>
-    <p class="hint mono">Ziel: die Symbole verstehen, keine Aufgaben rechnen — Tag für Tag</p>
+    <p class="hint mono">Ziel: die Symbole verstehen — Tag für Tag, mit Karten zum Aufdecken und Übungsaufgaben inkl. Rechenweg</p>
     <select id="lernplanDaySelect"></select>
     <p class="note" id="lernplanIntro"></p>
     <div id="lernplanConcepts"></div>
@@ -577,16 +580,19 @@ Object.entries(FORMULA_CATEGORIES).forEach(([key, cat]) => {
 function renderFormulaCategory(key) {
   formulaTemplatesDiv.innerHTML = '';
   FORMULA_CATEGORIES[key].items.forEach(t => {
-    const btn = document.createElement('button');
-    btn.className = 'const-btn';
-    btn.innerHTML = `<div class="const-top"><span class="const-sym mono" style="color:${t.color}">${t.label}</span>
-      <span class="const-unit mono" style="color:${t.color}">${t.status}</span></div>
-      <div class="const-name">${t.info}</div>`;
-    btn.onclick = () => {
+    const card = document.createElement('div');
+    card.className = 'const-btn concept-card';
+    card.innerHTML = `<div class="const-top"><span class="const-sym mono" style="color:${t.color}">${t.label}</span>
+      <span class="const-unit mono" style="color:${t.color}">${t.status}</span><span class="flip-hint mono">antippen ↴</span></div>
+      <div class="const-name">${t.info}</div>
+      <button class="btn btn-primary formula-load-btn mono">In Formelfeld laden &amp; auswerten</button>`;
+    card.onclick = () => card.classList.toggle('revealed');
+    card.querySelector('.formula-load-btn').onclick = (e) => {
+      e.stopPropagation();
       formulaInput.value = t.formula;
       evaluate();
     };
-    formulaTemplatesDiv.appendChild(btn);
+    formulaTemplatesDiv.appendChild(card);
   });
 }
 formulaCatSelect.onchange = () => renderFormulaCategory(formulaCatSelect.value);
@@ -1062,84 +1068,147 @@ const LEARNING_PLAN = [
     intro: "Heute legst du die Werkzeuge fest, mit denen Physiker beschreiben, wie sich Energie im Raum bewegt und wirbelt.",
     concepts: [
       { name: "Der Differenzialquotient (Die Ableitung)", formula: "f'(x) = lim[h→0] (f(x+h) − f(x)) / h",
-        meaning: "Misst die exakte Steigung oder Veränderung einer Kurve in einem unendlich kleinen Punkt." },
+        meaning: "Misst die exakte Steigung oder Veränderung einer Kurve in einem unendlich kleinen Punkt.",
+        exercise: { question: "Berechne die Ableitung von f(x) = x³ an der Stelle x = 2 mit dem Differenzenquotienten (h = 0,001).",
+          formula: "h=0.001; x=2; ((x+h)^3 - x^3)/h",
+          steps: ["f(x) = x³, x = 2, h = 0,001", "f(x+h) = (2,001)³ = 8,012006001", "f(x) = 2³ = 8", "(f(x+h) − f(x)) / h = 0,012006001 / 0,001 = 12,006", "Exakter Wert über f'(x)=3x²: 3·2² = 12 — die Näherung passt."] } },
       { name: "Der Gradient (∇f — Nabla-Symbol)", formula: "∇f = (∂f/∂x, ∂f/∂y, ∂f/∂z)",
-        meaning: "Zeigt im 3D-Raum als Pfeil exakt in die Richtung, in der sich ein Wert am steilsten erhöht." },
+        meaning: "Zeigt im 3D-Raum als Pfeil exakt in die Richtung, in der sich ein Wert am steilsten erhöht.",
+        exercise: { question: "Berechne den Betrag des Gradienten von f(x,y) = x² + y² am Punkt (3, 4).",
+          formula: "x=3; y=4; dfdx=2*x; dfdy=2*y; sqrt(dfdx^2+dfdy^2)",
+          steps: ["∂f/∂x = 2x = 2·3 = 6", "∂f/∂y = 2y = 2·4 = 8", "∇f = (6, 8)", "|∇f| = √(6² + 8²) = √100 = 10"] } },
       { name: "Die Rotation eines Vektorfeldes (Curl)", formula: "rot F⃗ = ∇ × F⃗",
-        meaning: "Misst, ob und wie stark ein Feld um einen bestimmten Punkt herumwirbelt." },
-    ]
+        meaning: "Misst, ob und wie stark ein Feld um einen bestimmten Punkt herumwirbelt.",
+        exercise: { question: "Berechne die z-Komponente von rot F⃗ für das Wirbelfeld F⃗ = (−y, x).",
+          formula: "dFydx=1; dFxdy=-1; dFydx - dFxdy",
+          steps: ["F⃗ = (−y, x), also Fx = −y, Fy = x", "∂Fy/∂x = ∂(x)/∂x = 1", "∂Fx/∂y = ∂(−y)/∂y = −1", "rot_z F⃗ = ∂Fy/∂x − ∂Fx/∂y = 1 − (−1) = 2"] } },
+    ],
   },
   {
     day: 2, title: "Das Verhalten von Feldern messen",
     intro: "Ein Feld ist ein Raum, in dem an jedem Punkt eine Kraft oder ein Wert existiert. Heute lernst du, wie man Flüsse und Quellen misst.",
     concepts: [
       { name: "Die Divergenz (Quellen und Senken)", formula: "div F⃗ = ∇ · F⃗",
-        meaning: "Zeigt an, ob an einem Punkt Energie „entsteht” (Quelle) oder „verschwindet” (Senke)." },
+        meaning: "Zeigt an, ob an einem Punkt Energie „entsteht” (Quelle) oder „verschwindet” (Senke).",
+        exercise: { question: "Berechne div F⃗ für F⃗ = (x², y³, 0) am Punkt (1, 2, 0).",
+          formula: "x=1; y=2; 2*x + 3*y^2",
+          steps: ["F⃗ = (x², y³, 0)", "∂Fx/∂x = 2x = 2·1 = 2", "∂Fy/∂y = 3y² = 3·2² = 12", "div F⃗ = 2 + 12 = 14"] } },
       { name: "Der Laplace-Operator (Δ)", formula: "Δf = ∇²f = ∂²f/∂x² + ∂²f/∂y² + ∂²f/∂z²",
-        meaning: "Misst die Krümmung eines Feldes — genutzt für Wellen und Potentialverteilungen." },
+        meaning: "Misst die Krümmung eines Feldes — genutzt für Wellen und Potentialverteilungen.",
+        exercise: { question: "Berechne Δf für f(x,y) = x² + y².",
+          formula: "2 + 2",
+          steps: ["f = x² + y²", "∂²f/∂x² = 2", "∂²f/∂y² = 2", "Δf = 2 + 2 = 4 (konstant, unabhängig vom Punkt)"] } },
       { name: "Das Skalarprodukt (Dot Product)", formula: "a⃗ · b⃗ = aₓbₓ + a_yb_y + a_zb_z",
-        meaning: "Multipliziert zwei Vektoren zu einer Zahl; zeigt, wie sehr sie in dieselbe Richtung weisen." },
-    ]
+        meaning: "Multipliziert zwei Vektoren zu einer Zahl; zeigt, wie sehr sie in dieselbe Richtung weisen.",
+        exercise: { question: "Berechne das Skalarprodukt der Vektoren a = (1, 2, 3) und b = (4, 5, 6).",
+          formula: "ax=1; ay=2; az=3; bx=4; by=5; bz=6; ax*bx + ay*by + az*bz",
+          steps: ["a⃗ · b⃗ = axbx + ayby + azbz", "= 1·4 + 2·5 + 3·6", "= 4 + 10 + 18", "= 32"] } },
+    ],
   },
   {
     day: 3, title: "Die Geometrie von Drehungen (Lineare Algebra)",
     intro: "Um Drehungen mathematisch sauber zu beschreiben, nutzt die Physik Matrizen.",
     concepts: [
       { name: "Die Drehmatrix (Rotation in 2D)", formula: "R = [[cosθ, −sinθ], [sinθ, cosθ]]",
-        meaning: "Multipliziert man einen Vektor mit dieser Matrix, wird er um den Winkel θ gedreht." },
+        meaning: "Multipliziert man einen Vektor mit dieser Matrix, wird er um den Winkel θ gedreht.",
+        exercise: { question: "Drehe den Vektor v = (1, 0) um θ = 90°. Berechne die x-Komponente des gedrehten Vektors.",
+          formula: "theta=90*pi/180; x=1; y=0; round(cos(theta)*x - sin(theta)*y, 10)",
+          steps: ["x' = cosθ·x − sinθ·y", "θ = 90°, v = (1, 0)", "x' = cos(90°)·1 − sin(90°)·0 = 0·1 − 1·0 = 0", "(y' = sin90°·1+cos90°·0 = 1, also v' = (0,1) — 90°-Drehung nach oben)"] } },
       { name: "Das Kreuzprodukt (Vector Product)", formula: "a⃗ × b⃗ = c⃗",
-        meaning: "Erzeugt aus zwei Vektoren einen dritten, der senkrecht auf beiden steht (Fliehkraft, Magnetfelder)." },
+        meaning: "Erzeugt aus zwei Vektoren einen dritten, der senkrecht auf beiden steht (Fliehkraft, Magnetfelder).",
+        exercise: { question: "Berechne die z-Komponente des Kreuzprodukts von a = (1, 0, 0) und b = (0, 1, 0).",
+          formula: "ax=1; ay=0; bx=0; by=1; ax*by - ay*bx",
+          steps: ["(a⃗ × b⃗)z = axby − aybx", "= 1·1 − 0·0", "= 1", "(a⃗ × b⃗ zeigt in z-Richtung — das ist die Grundlage des rechtshändigen Koordinatensystems)"] } },
       { name: "Eigenwerte und Eigenvektoren", formula: "A v⃗ = λ v⃗",
-        meaning: "Richtungen v⃗, die sich bei einer Raumveränderung A nicht drehen, nur strecken/stauchen (λ)." },
-    ]
+        meaning: "Richtungen v⃗, die sich bei einer Raumveränderung A nicht drehen, nur strecken/stauchen (λ).",
+        exercise: { question: "Eine Diagonalmatrix A hat die Einträge 2 und 3 auf der Diagonale. Wie lautet der größere Eigenwert?",
+          formula: "max(2, 3)",
+          steps: ["A = diag(2, 3) ist eine Diagonalmatrix", "Bei Diagonalmatrizen stehen die Eigenwerte direkt auf der Diagonale", "λ₁ = 2, λ₂ = 3", "größerer Eigenwert: 3"] } },
+    ],
   },
   {
     day: 4, title: "Die Gesetze der Wellen und Schwingungen",
     intro: "Energie bewegt sich oft in Wellen — Frequenzen und Schwingungen basieren auf diesen Prinzipien.",
     concepts: [
       { name: "Die klassische Wellengleichung", formula: "∂²u/∂t² = c² Δu",
-        meaning: "Beschreibt, wie sich eine Störung mit Geschwindigkeit c durch den Raum ausbreitet." },
+        meaning: "Beschreibt, wie sich eine Störung mit Geschwindigkeit c durch den Raum ausbreitet.",
+        exercise: { question: "Berechne die Wellengeschwindigkeit c einer Saite mit Spannung F = 100 N und linearer Massendichte μ = 0,01 kg/m (c = √(F/μ)).",
+          formula: "F=100; mu=0.01; sqrt(F/mu)",
+          steps: ["c = √(F/μ)", "F = 100 N, μ = 0,01 kg/m", "c = √(100 / 0,01) = √10000", "c = 100 m/s"] } },
       { name: "Die Eulersche Formel", formula: "e^(iφ) = cosφ + i sinφ",
-        meaning: "Verbindet die e-Funktion mit Kreisbewegungen über komplexe Zahlen." },
+        meaning: "Verbindet die e-Funktion mit Kreisbewegungen über komplexe Zahlen.",
+        exercise: { question: "Berechne cos(φ) für φ = π/3 über die Eulersche Formel (Realteil von e^(iφ)).",
+          formula: "phi=pi/3; cos(phi)",
+          steps: ["e^(iφ) = cosφ + i·sinφ", "Realteil von e^(iφ) ist cosφ", "φ = π/3 = 60°", "cos(60°) = 0,5"] } },
       { name: "Der harmonische Oszillator", formula: "ẍ + ω²x = 0",
-        meaning: "Grundgleichung für jedes System, das pendelt, schwingt oder vibriert. ω ist die Kreisfrequenz." },
-    ]
+        meaning: "Grundgleichung für jedes System, das pendelt, schwingt oder vibriert. ω ist die Kreisfrequenz.",
+        exercise: { question: "Berechne die Kreisfrequenz ω eines harmonischen Oszillators mit Federkonstante k = 50 N/m und Masse m = 2 kg (ω = √(k/m)).",
+          formula: "k=50; m=2; sqrt(k/m)",
+          steps: ["ω = √(k/m)", "k = 50 N/m, m = 2 kg", "ω = √(50/2) = √25", "ω = 5 rad/s"] } },
+    ],
   },
   {
     day: 5, title: "Felder und ihre Energie (Klassische Feldtheorie)",
     intro: "Jetzt kommen die Werkzeuge, mit denen man physikalische Systeme mathematisch aufschreibt.",
     concepts: [
       { name: "Die Lagrange-Funktion", formula: "L = T − V",
-        meaning: "Dynamik eines Systems: kinetische Energie T minus potentielle Energie V." },
+        meaning: "Dynamik eines Systems: kinetische Energie T minus potentielle Energie V.",
+        exercise: { question: "Berechne L = T − V für eine kinetische Energie T = 10 J und potentielle Energie V = 4 J.",
+          formula: "T=10; V=4; T - V",
+          steps: ["L = T − V", "T = 10 J, V = 4 J", "L = 10 − 4", "L = 6 J"] } },
       { name: "Die Euler-Lagrange-Gleichung", formula: "∂L/∂x − d/dt(∂L/∂ẋ) = 0",
-        meaning: "Das Gesetz, nach dem sich die Natur bewegt (Prinzip der kleinsten Wirkung)." },
+        meaning: "Das Gesetz, nach dem sich die Natur bewegt (Prinzip der kleinsten Wirkung).",
+        exercise: { question: "Für L = ½mv² − V(x) liefert die Euler-Lagrange-Gleichung m·ẍ = F. Berechne F für m = 2 kg und a = 3 m/s².",
+          formula: "m=2; a=3; m*a",
+          steps: ["Euler-Lagrange für L = ½mv² − V(x) ergibt: m·ẍ = −∂V/∂x = F", "m = 2 kg, a = ẍ = 3 m/s²", "F = m·a = 2·3", "F = 6 N (Newtons 2. Gesetz als Spezialfall)"] } },
       { name: "Das Gaußsche Gesetz", formula: "∇ · E⃗ = ρ/ε₀",
-        meaning: "Beschreibt, wie Ladungen ρ ein elektrisches Feld E⃗ im Raum aufbauen." },
-    ]
+        meaning: "Beschreibt, wie Ladungen ρ ein elektrisches Feld E⃗ im Raum aufbauen.",
+        exercise: { question: "Berechne das E-Feld einer Punktladung q = 1 nC im Abstand r = 0,1 m (E = q/(4πε₀r²)).",
+          formula: "q=1e-9; r=0.1; q/(4*pi*eps0*r^2)",
+          steps: ["E = q/(4πε₀r²)", "q = 1 nC = 1·10⁻⁹ C, r = 0,1 m", "E = 1·10⁻⁹ / (4π·8,854·10⁻¹²·0,01)", "E ≈ 899 V/m"] } },
+    ],
   },
   {
     day: 6, title: "Das Verhalten von Potentialen",
     intro: "Hier lernst du, wie Physiker mathematisch Täler bauen, in denen Teilchen stabil festsitzen.",
     concepts: [
       { name: "Das Coulomb-Potential", formula: "V(r) = (1/4πε₀) · q₁q₂/r",
-        meaning: "Zeigt, wie die Energie zwischen zwei Ladungen mit dem Abstand r abfällt." },
+        meaning: "Zeigt, wie die Energie zwischen zwei Ladungen mit dem Abstand r abfällt.",
+        exercise: { question: "Berechne das Coulomb-Potential V(r) für zwei Elementarladungen im Abstand r = 1 nm.",
+          formula: "q1=1.6e-19; q2=1.6e-19; r=1e-9; q1*q2/(4*pi*eps0*r)",
+          steps: ["V(r) = q₁q₂/(4πε₀r)", "q₁ = q₂ = 1,6·10⁻¹⁹ C, r = 1 nm = 10⁻⁹ m", "V = (1,6·10⁻¹⁹)² / (4π·8,854·10⁻¹²·10⁻⁹)", "V ≈ 2,3·10⁻¹⁹ J"] } },
       { name: "Das Lennard-Jones-Potential", formula: "V(r) = 4ε[(σ/r)¹² − (σ/r)⁶]",
-        meaning: "Der 1/r⁶-Term zieht Teilchen an, der 1/r¹²-Term stößt sie bei zu geringem Abstand stark ab." },
+        meaning: "Der 1/r⁶-Term zieht Teilchen an, der 1/r¹²-Term stößt sie bei zu geringem Abstand stark ab.",
+        exercise: { question: "Berechne V(r) für r = σ (also σ/r = 1) mit ε = 1.",
+          formula: "eps=1; ratio=1; 4*eps*(ratio^12 - ratio^6)",
+          steps: ["V(r) = 4ε[(σ/r)¹² − (σ/r)⁶]", "bei r = σ ist σ/r = 1", "V = 4ε[1¹² − 1⁶] = 4ε·[1 − 1]", "V = 0 (bei r=σ kreuzt das Potential die Nullachse)"] } },
       { name: "Die Kontinuitätsgleichung", formula: "∂ρ/∂t + ∇ · j⃗ = 0",
-        meaning: "Erhaltungssatz: ändert sich die Dichte ρ, muss ein Strom j⃗ fließen — Energie verschwindet nicht einfach." },
-    ]
+        meaning: "Erhaltungssatz: ändert sich die Dichte ρ, muss ein Strom j⃗ fließen — Energie verschwindet nicht einfach.",
+        exercise: { question: "Die Dichte ρ nimmt mit ∂ρ/∂t = −2 kg/(m³s) ab. Wie groß muss ∇·j⃗ sein?",
+          formula: "drhodt=-2; -drhodt",
+          steps: ["∂ρ/∂t + ∇·j⃗ = 0, also ∇·j⃗ = −∂ρ/∂t", "∂ρ/∂t = −2 kg/(m³s) (Abnahme)", "∇·j⃗ = −(−2)", "∇·j⃗ = 2 kg/(m³s)"] } },
+    ],
   },
   {
     day: 7, title: "Der Einstieg in die moderne Physik",
     intro: "Am letzten Tag ein Blick auf die mathematischen Strukturen der Quantenwelt.",
     concepts: [
       { name: "Die Schrödinger-Gleichung (zeitunabhängig)", formula: "Ĥψ = Eψ",
-        meaning: "Fundament der Quantenmechanik — berechnet die Wellenfunktion ψ eines Teilchens im Energiesystem Ĥ." },
+        meaning: "Fundament der Quantenmechanik — berechnet die Wellenfunktion ψ eines Teilchens im Energiesystem Ĥ.",
+        exercise: { question: "Grundzustandsenergie E₁ = h²/(8mₑL²) eines Elektrons im Kasten der Breite L = 1 nm.",
+          formula: "L=1e-9; h^2/(8*me*L^2)",
+          steps: ["E₁ = h²/(8mₑL²) (Teilchen im unendlich hohen Potentialtopf)", "L = 1 nm = 10⁻⁹ m", "E₁ = (6,626·10⁻³⁴)² / (8·9,109·10⁻³¹·(10⁻⁹)²)", "E₁ ≈ 6,0·10⁻²⁰ J ≈ 0,376 eV"] } },
       { name: "Die Planck-Einstein-Beziehung", formula: "E = h·ν",
-        meaning: "Verknüpft die Energie eines Photons direkt mit seiner Frequenz ν über h." },
+        meaning: "Verknüpft die Energie eines Photons direkt mit seiner Frequenz ν über h.",
+        exercise: { question: "Berechne die Photonenenergie E für eine Frequenz f = 6·10¹⁴ Hz.",
+          formula: "f=6e14; h*f",
+          steps: ["E = h·f", "h = 6,626·10⁻³⁴ J·s, f = 6·10¹⁴ Hz", "E = 6,626·10⁻³⁴ · 6·10¹⁴", "E ≈ 3,98·10⁻¹⁹ J"] } },
       { name: "Das Prinzip der Eichinvarianz", formula: "φ → φ' = φ + α",
-        meaning: "Die Beschreibung eines Feldes lässt sich verschieben, ohne dass sich die messbare Physik ändert — Ursprung aller Grundkräfte." },
-    ]
+        meaning: "Die Beschreibung eines Feldes lässt sich verschieben, ohne dass sich die messbare Physik ändert — Ursprung aller Grundkräfte.",
+        exercise: { question: "Für φ = 5 und eine Eichverschiebung α = 3: wie lautet φ' = φ + α?",
+          formula: "phi=5; alpha=3; phi+alpha",
+          steps: ["φ' = φ + α", "φ = 5, α = 3", "φ' = 5 + 3", "φ' = 8 (die messbare Physik, z.B. |φ|²-Differenzen, bleibt trotzdem unverändert)"] } },
+    ],
   },
 ];
 
@@ -1154,6 +1223,15 @@ LEARNING_PLAN.forEach((d, i) => {
   lernplanDaySelect.appendChild(opt);
 });
 
+function evaluateExerciseFormula(formula) {
+  const scope = { ...SCOPE };
+  let result = null;
+  try {
+    formula.split(';').map(s => s.trim()).filter(Boolean).forEach(s => { result = math.evaluate(s, scope); });
+  } catch (e) { result = null; }
+  return result;
+}
+
 function renderLearningDay(dayIndex) {
   const d = LEARNING_PLAN[dayIndex];
   lernplanIntro.textContent = d.intro;
@@ -1166,6 +1244,20 @@ function renderLearningDay(dayIndex) {
       <div class="const-name">${c.meaning}</div>`;
     card.onclick = () => card.classList.toggle('revealed');
     lernplanConcepts.appendChild(card);
+
+    if (c.exercise) {
+      const result = evaluateExerciseFormula(c.exercise.formula);
+      const resultText = result !== null ? math.format(result, { notation: 'auto', precision: 6 }) : 'Fehler bei der Berechnung';
+      const stepsHtml = c.exercise.steps.map(s => `<li>${s}</li>`).join('');
+      const exCard = document.createElement('div');
+      exCard.className = 'concept-card';
+      exCard.innerHTML = `<div class="const-top"><span class="const-sym mono">📝 Übung: ${c.exercise.question}</span><span class="flip-hint mono">Rechenweg ↴</span></div>
+        <div class="concept-formula mono">${c.exercise.formula}</div>
+        <ol class="exercise-steps mono">${stepsHtml}</ol>
+        <div class="const-name">Ergebnis: <b>${resultText}</b></div>`;
+      exCard.onclick = () => exCard.classList.toggle('revealed');
+      lernplanConcepts.appendChild(exCard);
+    }
   });
 }
 lernplanDaySelect.onchange = () => renderLearningDay(parseInt(lernplanDaySelect.value, 10));
