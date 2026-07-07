@@ -1804,22 +1804,27 @@ tabbar.querySelectorAll('.tab-btn').forEach(btn => {
 });
 
 // ---------- Swipe navigation ----------
-let touchStartX = 0, touchStartY = 0, touchStartEl = null;
+let touchStartX = 0, touchStartY = 0, touchStartEl = null, touchStartTime = 0, lastSwipeTime = 0;
 document.addEventListener('touchstart', e => {
   const t = e.touches[0];
   touchStartX = t.clientX;
   touchStartY = t.clientY;
   touchStartEl = e.target;
+  touchStartTime = Date.now();
 }, { passive: true });
 document.addEventListener('touchend', e => {
   if (touchStartEl && touchStartEl.closest && touchStartEl.closest('.ptable-wrap, .card-stack')) return;
+  const now = Date.now();
+  if (now - lastSwipeTime < 500) return; // Abklingzeit, damit eine Geste nicht mehrere Tabs auf einmal durchblättert
   const t = e.changedTouches[0];
   const dx = t.clientX - touchStartX;
   const dy = t.clientY - touchStartY;
-  if (Math.abs(dx) < 70 || Math.abs(dx) < Math.abs(dy) * 1.8) return;
+  const elapsed = now - touchStartTime;
+  if (Math.abs(dx) < 110 || Math.abs(dx) < Math.abs(dy) * 1.8 || elapsed > 600) return;
   const curIdx = TAB_ORDER.indexOf(document.querySelector('.app-page.active').id);
   const newIdx = curIdx + (dx < 0 ? 1 : -1);
   if (newIdx < 0 || newIdx >= TAB_ORDER.length) return;
+  lastSwipeTime = now;
   showPage(TAB_ORDER[newIdx], dx < 0 ? 'left' : 'right');
 }, { passive: true });
 
