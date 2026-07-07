@@ -1,6 +1,13 @@
 <!DOCTYPE html>
 <html lang="de">
 <head>
+<script>
+  (function() {
+    var stored = localStorage.getItem('physlab-theme');
+    var theme = stored || (window.matchMedia && matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
+    document.documentElement.dataset.theme = theme;
+  })();
+</script>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 <title>PHYSLAB</title>
@@ -19,59 +26,76 @@
 </script>
 <style>
   @import url('https://fonts.googleapis.com/css2?family=Spectral:wght@400;600&family=Inter:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500;600&display=swap');
+  :root {
+    --bg:#EFEDF3; --card-bg:#F8F7FB; --border:#DCD7E6; --border-soft:#E6E1EF; --hover-bg:#EDE9F5;
+    --text:#211F29; --text-soft:#4B4656; --text-mut:#6B6575;
+    --accent:#8B7FC7; --accent-deep:#6B5B95; --accent-rgb:139,127,199;
+    --error:#C1432A;
+  }
+  :root[data-theme="dark"] {
+    --bg:#0B0B0F; --card-bg:#17161D; --border:#2A2833; --border-soft:#322F3C; --hover-bg:#211F2A;
+    --text:#EDEBF2; --text-soft:#C7C3D1; --text-mut:#9691A3;
+    --accent:#A79BE8; --accent-deep:#8A79C4; --accent-rgb:167,155,232;
+    --error:#FF6B52;
+  }
+  :root[data-theme="dark"] .cat-edelgas { background:#8F7BC0; }
+  :root[data-theme="dark"] .cat-actinoid { background:#C08BB5; }
   * { box-sizing: border-box; }
-  body { margin:0; background:#EFEDF3; color:#211F29; font-family:'Inter',sans-serif; padding-bottom:64px; }
+  body { margin:0; background:var(--bg); color:var(--text); font-family:'Inter',sans-serif; padding-bottom:64px; }
   .display { font-family:'Spectral',serif; }
   .mono { font-family:'IBM Plex Mono',monospace; }
-  header { border-bottom:1px solid #DCD7E6; padding:16px 20px; }
-  header .row { display:flex; justify-content:space-between; align-items:baseline; }
+  header { border-bottom:1px solid var(--border); padding:16px 20px; }
+  header .row { display:flex; justify-content:space-between; align-items:baseline; gap:8px; }
   header h1 { font-size:22px; margin:0; letter-spacing:0.03em; }
-  header p { margin:4px 0 0; color:#6B6575; font-size:12px; }
-  .badge { font-size:11px; color:#8B7FC7; border:1px solid rgba(139,127,199,0.4); padding:3px 8px; border-radius:4px; }
+  header p { margin:4px 0 0; color:var(--text-mut); font-size:12px; }
+  .header-actions { display:flex; align-items:center; gap:8px; }
+  .badge { font-size:11px; color:var(--accent); border:1px solid rgba(var(--accent-rgb),0.4); padding:3px 8px; border-radius:4px; }
+  .theme-toggle { font-size:16px; background:var(--card-bg); border:1px solid var(--border); border-radius:6px; padding:4px 8px; cursor:pointer; color:var(--text); line-height:1; }
   svg.trace { width:100%; height:28px; margin-top:8px; }
-  .grid { display:grid; grid-template-columns:1fr; gap:1px; background:#DCD7E6; }
+  svg.trace polyline { stroke:var(--accent); }
+  .grid { display:grid; grid-template-columns:1fr; gap:1px; background:var(--border); }
   @media (min-width:1024px) { .grid.grid2 { grid-template-columns:2fr 3fr; } }
   .app-page { display:none; }
   .app-page.active { display:block; }
-  .tabbar { position:fixed; bottom:0; left:0; right:0; display:flex; background:#F8F7FB; border-top:1px solid #DCD7E6; z-index:50; }
-  .tab-btn { flex:1; background:none; border:none; padding:8px 2px 6px; cursor:pointer; color:#6B6575; font-family:'IBM Plex Mono',monospace; display:flex; flex-direction:column; align-items:center; gap:2px; }
+  .tabbar { position:fixed; bottom:0; left:0; right:0; display:flex; background:var(--card-bg); border-top:1px solid var(--border); z-index:50; }
+  .tab-btn { flex:1; background:none; border:none; padding:8px 2px 6px; cursor:pointer; color:var(--text-mut); font-family:'IBM Plex Mono',monospace; display:flex; flex-direction:column; align-items:center; gap:2px; }
   .tab-btn .tab-icon { font-size:18px; line-height:1; }
   .tab-btn span:last-child { font-size:9.5px; text-align:center; line-height:1.15; }
-  .tab-btn.active { color:#8B7FC7; }
-  .panel { background:#EFEDF3; padding:16px; }
+  .tab-btn.active { color:var(--accent); }
+  .panel { background:var(--bg); padding:16px; }
   .panel h2 { font-size:17px; margin:0 0 8px; }
-  .hint { color:#6B6575; font-size:11px; margin:0 0 12px; }
-  .const-btn { width:100%; text-align:left; background:#F8F7FB; border:1px solid #E6E1EF; border-radius:6px; padding:8px 12px; margin-bottom:6px; color:inherit; cursor:pointer; }
-  .const-btn:hover { background:#EDE9F5; }
+  .hint { color:var(--text-mut); font-size:11px; margin:0 0 12px; }
+  .const-btn { width:100%; text-align:left; background:var(--card-bg); border:1px solid var(--border-soft); border-radius:6px; padding:8px 12px; margin-bottom:6px; color:inherit; cursor:pointer; }
+  .const-btn:hover { background:var(--hover-bg); }
   .const-top { display:flex; justify-content:space-between; align-items:baseline; }
-  .const-sym { color:#8B7FC7; font-size:14px; }
-  .const-unit { color:#6B6575; font-size:11px; }
-  .const-name { color:#4B4656; font-size:12px; }
-  .const-val { color:#6B5B95; font-size:11px; }
+  .const-sym { color:var(--accent); font-size:14px; }
+  .const-unit { color:var(--text-mut); font-size:11px; }
+  .const-name { color:var(--text-soft); font-size:12px; }
+  .const-val { color:var(--accent-deep); font-size:11px; }
   input[type=text], input[type=number], select {
-    width:100%; background:#F8F7FB; border:1px solid #DCD7E6; border-radius:6px;
-    padding:8px 12px; color:#211F29; font-size:14px; outline:none;
+    width:100%; background:var(--card-bg); border:1px solid var(--border); border-radius:6px;
+    padding:8px 12px; color:var(--text); font-size:14px; outline:none;
   }
-  input:focus, select:focus { border-color:#8B7FC7; }
+  input:focus, select:focus { border-color:var(--accent); }
   .btn { font-family:'IBM Plex Mono',monospace; font-size:12px; border:none; border-radius:6px; padding:8px 14px; cursor:pointer; margin-top:8px; }
-  .btn-primary { background:#8B7FC7; color:#F8F7FB; }
-  .btn-warn { background:#6B5B95; color:#F8F7FB; }
-  .readout { margin-top:12px; background:#F8F7FB; border:1px solid #DCD7E6; border-radius:6px; padding:12px; font-size:17px; color:#8B7FC7; }
-  .readout.err { color:#C1432A; font-size:14px; }
+  .btn-primary { background:var(--accent); color:var(--card-bg); }
+  .btn-warn { background:var(--accent-deep); color:var(--card-bg); }
+  .readout { margin-top:12px; background:var(--card-bg); border:1px solid var(--border); border-radius:6px; padding:12px; font-size:17px; color:var(--accent); }
+  .readout.err { color:var(--error); font-size:14px; }
   .row2 { display:flex; gap:8px; margin:8px 0; }
   .row2 input { width:50%; }
   .row3 { display:flex; gap:8px; margin:8px 0; }
   .row3 input { width:33%; }
-  #canvasWrap, .simCanvasWrap { height:240px; margin-top:12px; background:#F8F7FB; border:1px solid #DCD7E6; border-radius:6px; padding:6px; }
+  #canvasWrap, .simCanvasWrap { height:240px; margin-top:12px; background:var(--card-bg); border:1px solid var(--border); border-radius:6px; padding:6px; }
   canvas { width:100%; height:100%; display:block; }
-  .field-label { font-size:11px; color:#6B6575; margin:10px 0 4px; }
-  .stat-line { font-size:12px; color:#4B4656; margin-top:8px; }
-  .stat-line b { color:#8B7FC7; }
-  .note { font-size:11px; color:#6B6575; margin-top:8px; line-height:1.5; }
-  .legend { display:flex; gap:14px; font-size:11px; margin-top:6px; color:#4B4656; }
+  .field-label { font-size:11px; color:var(--text-mut); margin:10px 0 4px; }
+  .stat-line { font-size:12px; color:var(--text-soft); margin-top:8px; }
+  .stat-line b { color:var(--accent); }
+  .note { font-size:11px; color:var(--text-mut); margin-top:8px; line-height:1.5; }
+  .legend { display:flex; gap:14px; font-size:11px; margin-top:6px; color:var(--text-soft); }
   .legend span { display:inline-flex; align-items:center; gap:4px; }
   .dot { width:8px; height:8px; border-radius:50%; display:inline-block; }
-  .full-panel { background:#EFEDF3; padding:16px; border-top:1px solid #DCD7E6; }
+  .full-panel { background:var(--bg); padding:16px; border-top:1px solid var(--border); }
   .ptable-wrap { overflow-x:auto; margin-top:12px; padding-bottom:8px; }
   .ptable { display:grid; grid-template-columns: repeat(18, 46px); grid-auto-rows: 46px; gap:2px; width:max-content; }
   .pt-cell { border-radius:4px; padding:3px 4px; cursor:pointer; color:#F8F7FB; display:flex; flex-direction:column; justify-content:space-between; border:none; text-align:left; font-family:inherit; }
@@ -88,21 +112,21 @@
   .cat-lanthanoid { background:#B98BC7; }
   .cat-actinoid { background:#9B6B95; }
   .cat-unbekannt { background:#ABA5B8; }
-  .pt-legend { display:flex; flex-wrap:wrap; gap:10px; font-size:11px; margin-top:10px; color:#4B4656; }
+  .pt-legend { display:flex; flex-wrap:wrap; gap:10px; font-size:11px; margin-top:10px; color:var(--text-soft); }
   .pt-legend span { display:inline-flex; align-items:center; gap:4px; }
   .pt-legend .dot { width:10px; height:10px; border-radius:3px; }
-  .pt-detail { margin-top:12px; background:#F8F7FB; border:1px solid #DCD7E6; border-radius:6px; padding:12px; }
-  .pt-detail-row { display:flex; justify-content:space-between; font-size:12px; margin:3px 0; color:#4B4656; }
-  .pt-detail-row b { color:#211F29; }
-  .concept-card { background:#F8F7FB; border:1px solid #E6E1EF; border-radius:6px; padding:8px 12px; margin-bottom:6px; }
+  .pt-detail { margin-top:12px; background:var(--card-bg); border:1px solid var(--border); border-radius:6px; padding:12px; }
+  .pt-detail-row { display:flex; justify-content:space-between; font-size:12px; margin:3px 0; color:var(--text-soft); }
+  .pt-detail-row b { color:var(--text); }
+  .concept-card { background:var(--card-bg); border:1px solid var(--border-soft); border-radius:6px; padding:8px 12px; margin-bottom:6px; }
   .concept-card .const-top { display:flex; justify-content:space-between; align-items:baseline; }
-  .concept-formula { color:#6B5B95; font-size:13px; margin:4px 0; }
+  .concept-formula { color:var(--accent-deep); font-size:13px; margin:4px 0; }
   .curve-controls { display:flex; gap:8px; align-items:flex-end; margin-bottom:8px; }
   .curve-controls > div { flex:1; }
   .sci-tabs { display:flex; gap:8px; margin-bottom:10px; }
   .sci-tab { flex:1; }
-  .sci-result-card { background:#F8F7FB; border:1px solid #E6E1EF; border-radius:6px; padding:8px 12px; margin-bottom:6px; }
-  .sci-result-card a { color:#6B5B95; }
+  .sci-result-card { background:var(--card-bg); border:1px solid var(--border-soft); border-radius:6px; padding:8px 12px; margin-bottom:6px; }
+  .sci-result-card a { color:var(--accent-deep); }
 </style>
 </head>
 <body>
@@ -113,10 +137,13 @@
       <h1 class="display">PHYSLAB</h1>
       <p class="mono">formeln, konstanten, funktionsplots &amp; experiment-simulationen · CODATA 2018</p>
     </div>
-    <span class="badge mono">Δ live</span>
+    <div class="header-actions">
+      <span class="badge mono">Δ live</span>
+      <button class="theme-toggle" id="themeToggleBtn" title="Hell/Dunkel umschalten">◐</button>
+    </div>
   </div>
   <svg class="trace" viewBox="0 0 400 40" preserveAspectRatio="none">
-    <polyline points="0,20 30,20 40,4 55,36 70,20 100,20 115,10 130,30 145,20 400,20" fill="none" stroke="#8B7FC7" stroke-width="1.5" opacity="0.8" />
+    <polyline points="0,20 30,20 40,4 55,36 70,20 100,20 115,10 130,30 145,20 400,20" fill="none" stroke-width="1.5" opacity="0.8" />
   </svg>
 </header>
 
@@ -561,11 +588,15 @@ function fitCanvas(cv) {
   cv.height = wrap.clientHeight * 2;
 }
 
+function themeColor(varName) {
+  return getComputedStyle(document.documentElement).getPropertyValue(varName).trim();
+}
+
 function drawAxes(ctx, W, H, xMin, xMax, yMin, yMax, marginL, marginB, marginT, marginR) {
-  ctx.strokeStyle = '#DCD7E6';
+  ctx.strokeStyle = themeColor('--border');
   ctx.lineWidth = 1;
   ctx.font = '20px IBM Plex Mono, monospace';
-  ctx.fillStyle = '#6B6575';
+  ctx.fillStyle = themeColor('--text-mut');
   const plotW = W - marginL - marginR, plotH = H - marginT - marginB;
   for (let i = 0; i <= 5; i++) {
     const gx = marginL + plotW * i / 5;
@@ -610,7 +641,7 @@ function plot() {
   const { plotW, plotH } = drawAxes(ctx, W, H, xMin, xMax, yMin, yMax, marginL, marginB, marginT, marginR);
   function toPx(x) { return marginL + (x - xMin) / (xMax - xMin) * plotW; }
   function toPy(y) { return marginT + (1 - (y - yMin) / (yMax - yMin)) * plotH; }
-  ctx.strokeStyle = '#8B7FC7'; ctx.lineWidth = 3; ctx.beginPath();
+  ctx.strokeStyle = themeColor('--accent'); ctx.lineWidth = 3; ctx.beginPath();
   let started = false;
   data.forEach(d => {
     if (!isFinite(d.y)) { started = false; return; }
@@ -768,17 +799,17 @@ function draw2D_points(measurements, theoryLine, unit, xLabel) {
   function toPx(i) { return marginL + (i - 0.5) / n * plotW; }
   function toPy(y) { return marginT + (1 - (y - yMin)/(yMax-yMin)) * plotH; }
   // theory line
-  ctx.strokeStyle = '#6B5B95'; ctx.lineWidth = 2; ctx.setLineDash([8,6]);
+  ctx.strokeStyle = themeColor('--accent-deep'); ctx.lineWidth = 2; ctx.setLineDash([8,6]);
   ctx.beginPath(); ctx.moveTo(marginL, toPy(theoryLine)); ctx.lineTo(marginL+plotW, toPy(theoryLine)); ctx.stroke();
   ctx.setLineDash([]);
   // points
-  ctx.fillStyle = '#8B7FC7';
+  ctx.fillStyle = themeColor('--accent');
   measurements.forEach((m,i) => {
     const px = toPx(i+1), py = toPy(m);
     ctx.beginPath(); ctx.arc(px, py, 6, 0, 2*Math.PI); ctx.fill();
   });
-  expLegend.innerHTML = `<span><span class="dot" style="background:#6B5B95"></span>Theorie: ${theoryLine.toFixed(4)} ${unit}</span>
-    <span><span class="dot" style="background:#8B7FC7"></span>Einzelmessung</span>`;
+  expLegend.innerHTML = `<span><span class="dot" style="background:var(--accent-deep)"></span>Theorie: ${theoryLine.toFixed(4)} ${unit}</span>
+    <span><span class="dot" style="background:var(--accent)"></span>Einzelmessung</span>`;
 }
 
 function drawDecay(points) {
@@ -793,19 +824,19 @@ function drawDecay(points) {
   function toPx(t) { return marginL + t/tMax*plotW; }
   function toPy(N) { return marginT + (1 - N/yMax) * plotH; }
   // theory curve
-  ctx.strokeStyle = '#6B5B95'; ctx.lineWidth = 2; ctx.beginPath();
+  ctx.strokeStyle = themeColor('--accent-deep'); ctx.lineWidth = 2; ctx.beginPath();
   points.forEach((pt,i) => { const px=toPx(pt.t), py=toPy(pt.N_theory); i===0?ctx.moveTo(px,py):ctx.lineTo(px,py); });
   ctx.stroke();
   // measured points + error bars
-  ctx.strokeStyle = '#8B7FC7'; ctx.fillStyle = '#8B7FC7'; ctx.lineWidth = 2;
+  ctx.strokeStyle = themeColor('--accent'); ctx.fillStyle = themeColor('--accent'); ctx.lineWidth = 2;
   points.forEach(pt => {
     const px = toPx(pt.t), py = toPy(pt.N_measured);
     const errPx = Math.abs(toPy(pt.N_measured - pt.err) - toPy(pt.N_measured + pt.err)) / 2;
     ctx.beginPath(); ctx.moveTo(px, py-errPx); ctx.lineTo(px, py+errPx); ctx.stroke();
     ctx.beginPath(); ctx.arc(px, py, 5, 0, 2*Math.PI); ctx.fill();
   });
-  expLegend.innerHTML = `<span><span class="dot" style="background:#6B5B95"></span>Theorie N(t)</span>
-    <span><span class="dot" style="background:#8B7FC7"></span>Simulierte Messung ± √N</span>`;
+  expLegend.innerHTML = `<span><span class="dot" style="background:var(--accent-deep)"></span>Theorie N(t)</span>
+    <span><span class="dot" style="background:var(--accent)"></span>Simulierte Messung ± √N</span>`;
 }
 
 function drawInterference(points) {
@@ -819,10 +850,10 @@ function drawInterference(points) {
   const { plotW, plotH } = drawAxes(ctx, W, H, xMin, xMax, yMin, yMax, marginL, marginB, marginT, marginR);
   function toPx(x) { return marginL + (x-xMin)/(xMax-xMin)*plotW; }
   function toPy(y) { return marginT + (1 - (y-yMin)/(yMax-yMin))*plotH; }
-  ctx.strokeStyle = '#8B7FC7'; ctx.lineWidth = 2.5; ctx.beginPath();
+  ctx.strokeStyle = themeColor('--accent'); ctx.lineWidth = 2.5; ctx.beginPath();
   points.forEach((pt,i) => { const px=toPx(pt.x), py=toPy(pt.y); i===0?ctx.moveTo(px,py):ctx.lineTo(px,py); });
   ctx.stroke();
-  expLegend.innerHTML = `<span><span class="dot" style="background:#8B7FC7"></span>Intensität I(θ) [x-Achse in mrad]</span>`;
+  expLegend.innerHTML = `<span><span class="dot" style="background:var(--accent)"></span>Intensität I(θ) [x-Achse in mrad]</span>`;
 }
 
 function runExperiment() {
@@ -1160,11 +1191,11 @@ function drawSpacetimeCurvature() {
   const { plotW, plotH } = drawAxes(ctx, W, H, 0, rMax, 0, zMax, marginL, marginB, marginT, marginR);
   function toPx(r) { return marginL + r / rMax * plotW; }
   function toPy(z) { return marginT + (1 - z / zMax) * plotH; }
-  ctx.strokeStyle = '#6B5B95'; ctx.lineWidth = 3; ctx.beginPath();
+  ctx.strokeStyle = themeColor('--accent-deep'); ctx.lineWidth = 3; ctx.beginPath();
   points.forEach((p, i) => { const px = toPx(p.r), py = toPy(p.z); i === 0 ? ctx.moveTo(px, py) : ctx.lineTo(px, py); });
   ctx.stroke();
   // vertical guide at the Schwarzschild radius
-  ctx.strokeStyle = '#6B6575'; ctx.lineWidth = 1; ctx.setLineDash([4, 4]); ctx.beginPath();
+  ctx.strokeStyle = themeColor('--text-mut'); ctx.lineWidth = 1; ctx.setLineDash([4, 4]); ctx.beginPath();
   ctx.moveTo(toPx(rs), marginT); ctx.lineTo(toPx(rs), marginT + plotH); ctx.stroke();
   ctx.setLineDash([]);
 
@@ -1273,6 +1304,22 @@ function showPage(pageId) {
 tabbar.querySelectorAll('.tab-btn').forEach(btn => {
   btn.onclick = () => showPage(btn.dataset.page);
 });
+
+// ---------- Theme toggle ----------
+const themeToggleBtn = document.getElementById('themeToggleBtn');
+function applyTheme(theme) {
+  document.documentElement.dataset.theme = theme;
+  localStorage.setItem('physlab-theme', theme);
+  themeToggleBtn.textContent = theme === 'dark' ? '☀' : '◐';
+  renderPeriodicTable();
+  const activePage = document.querySelector('.app-page.active');
+  if (activePage && activePage.id === 'page-formeln') plot();
+  if (activePage && activePage.id === 'page-lernplan') drawSpacetimeCurvature();
+}
+themeToggleBtn.textContent = document.documentElement.dataset.theme === 'dark' ? '☀' : '◐';
+themeToggleBtn.onclick = () => {
+  applyTheme(document.documentElement.dataset.theme === 'dark' ? 'light' : 'dark');
+};
 
 // init
 evaluate();
