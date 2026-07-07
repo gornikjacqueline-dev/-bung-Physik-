@@ -38,8 +38,6 @@
     --accent:#A79BE8; --accent-deep:#8A79C4; --accent-rgb:167,155,232;
     --error:#FF6B52;
   }
-  :root[data-theme="dark"] .cat-edelgas { background:#8F7BC0; }
-  :root[data-theme="dark"] .cat-actinoid { background:#C08BB5; }
   * { box-sizing: border-box; }
   body { margin:0; background:var(--bg); color:var(--text); font-family:'Inter',sans-serif; padding-bottom:64px; }
   .display { font-family:'Spectral',serif; }
@@ -101,16 +99,16 @@
   .pt-cell { border-radius:4px; padding:3px 4px; cursor:pointer; color:#F8F7FB; display:flex; flex-direction:column; justify-content:space-between; border:none; text-align:left; font-family:inherit; }
   .pt-cell .pt-num { font-size:8px; opacity:0.85; }
   .pt-cell .pt-sym { font-size:13px; font-weight:600; font-family:'IBM Plex Mono',monospace; }
-  .cat-alkalimetall { background:#B08BD9; }
-  .cat-erdalkalimetall { background:#9C8FD4; }
+  .cat-alkalimetall { background:#E8836F; }
+  .cat-erdalkalimetall { background:#E8A054; }
   .cat-uebergangsmetall { background:#8B7FC7; }
-  .cat-metall { background:#A79BD1; }
-  .cat-halbmetall { background:#C9A4D0; }
-  .cat-nichtmetall { background:#7FA8C7; }
-  .cat-halogen { background:#D98BB0; }
-  .cat-edelgas { background:#6B5B95; }
-  .cat-lanthanoid { background:#B98BC7; }
-  .cat-actinoid { background:#9B6B95; }
+  .cat-metall { background:#5FA8D8; }
+  .cat-halbmetall { background:#4FB89B; }
+  .cat-nichtmetall { background:#6BC169; }
+  .cat-halogen { background:#D4B23C; }
+  .cat-edelgas { background:#5B6FBE; }
+  .cat-lanthanoid { background:#D670A8; }
+  .cat-actinoid { background:#C15B6E; }
   .cat-unbekannt { background:#ABA5B8; }
   .pt-legend { display:flex; flex-wrap:wrap; gap:10px; font-size:11px; margin-top:10px; color:var(--text-soft); }
   .pt-legend span { display:inline-flex; align-items:center; gap:4px; }
@@ -123,8 +121,6 @@
   .concept-formula { color:var(--accent-deep); font-size:13px; margin:4px 0; }
   .curve-controls { display:flex; gap:8px; align-items:flex-end; margin-bottom:8px; }
   .curve-controls > div { flex:1; }
-  .sci-tabs { display:flex; gap:8px; margin-bottom:10px; }
-  .sci-tab { flex:1; }
   .sci-result-card { background:var(--card-bg); border:1px solid var(--border-soft); border-radius:6px; padding:8px 12px; margin-bottom:6px; }
   .sci-result-card a { color:var(--accent-deep); }
   .concept-card { cursor:pointer; }
@@ -252,23 +248,9 @@
 <div class="app-page" id="page-wissenschaft">
   <div class="full-panel">
     <h2 class="display">Aktuelle Wissenschaft</h2>
-    <p class="hint mono">echte Live-Suche · keine erfundenen Ergebnisse</p>
-    <div class="sci-tabs">
-      <button class="btn btn-primary sci-tab" id="sciTabArxiv">arXiv-Suche</button>
-      <button class="btn btn-warn sci-tab" id="sciTabWiki">Wikipedia</button>
-    </div>
-    <div id="sciArxivPanel">
-      <input type="text" id="arxivQuery" class="mono" placeholder="z.B. black hole entropy" />
-      <button class="btn btn-primary" id="arxivSearchBtn">arXiv durchsuchen</button>
-      <div class="readout err mono" id="arxivError" style="display:none;"></div>
-      <div id="arxivResults" style="margin-top:8px;"></div>
-    </div>
-    <div id="sciWikiPanel" style="display:none;">
-      <input type="text" id="wikiQuery" class="mono" placeholder="z.B. Photoeffekt" />
-      <button class="btn btn-warn" id="wikiSearchBtn">Wikipedia durchsuchen</button>
-      <div class="readout err mono" id="wikiError" style="display:none;"></div>
-      <div id="wikiResult" style="margin-top:8px;"></div>
-    </div>
+    <p class="hint mono">Suchbegriff eingeben · öffnet die jeweilige Quelle direkt in einem neuen Tab</p>
+    <input type="text" id="sciQuery" class="mono" placeholder="z.B. black hole entropy" />
+    <div id="sciLinks" style="margin-top:8px;"></div>
   </div>
 </div>
 
@@ -1238,93 +1220,37 @@ function drawSpacetimeCurvature() {
 document.getElementById('curvatureBtn').onclick = drawSpacetimeCurvature;
 
 // ---------- Aktuelle Wissenschaft ----------
-const sciTabArxiv = document.getElementById('sciTabArxiv');
-const sciTabWiki = document.getElementById('sciTabWiki');
-const sciArxivPanel = document.getElementById('sciArxivPanel');
-const sciWikiPanel = document.getElementById('sciWikiPanel');
-sciTabArxiv.onclick = () => { sciArxivPanel.style.display = 'block'; sciWikiPanel.style.display = 'none'; };
-sciTabWiki.onclick = () => { sciArxivPanel.style.display = 'none'; sciWikiPanel.style.display = 'block'; };
+// Kein Live-Fetch mehr (arXiv-API blockiert CORS in der Praxis) — stattdessen
+// verlässliche direkte Such-Links, die immer funktionieren, da sie nur normale
+// Links sind statt eines Netzwerk-Requests im Browser.
+const SCI_SOURCES = [
+  { label: "Google Scholar", urlFor: q => `https://scholar.google.com/scholar?q=${encodeURIComponent(q)}` },
+  { label: "arXiv", urlFor: q => `https://arxiv.org/search/?query=${encodeURIComponent(q)}&searchtype=all` },
+  { label: "Wikipedia", urlFor: q => `https://de.wikipedia.org/wiki/Spezial:Suche?search=${encodeURIComponent(q)}` },
+];
 
-const arxivQueryInput = document.getElementById('arxivQuery');
-const arxivErrorDiv = document.getElementById('arxivError');
-const arxivResultsDiv = document.getElementById('arxivResults');
+const sciQueryInput = document.getElementById('sciQuery');
+const sciLinksDiv = document.getElementById('sciLinks');
 
-async function searchArxiv() {
-  const query = arxivQueryInput.value.trim();
-  arxivErrorDiv.style.display = 'none';
-  arxivResultsDiv.innerHTML = '';
-  if (!query) {
-    arxivErrorDiv.style.display = 'block';
-    arxivErrorDiv.textContent = 'Fehler: bitte einen Suchbegriff eingeben';
-    return;
-  }
-  const url = `https://export.arxiv.org/api/query?search_query=all:${encodeURIComponent(query)}&max_results=10`;
-  try {
-    const res = await fetch(url);
-    if (!res.ok) throw new Error('HTTP ' + res.status);
-    const text = await res.text();
-    const xml = new DOMParser().parseFromString(text, 'text/xml');
-    const entries = Array.from(xml.getElementsByTagName('entry'));
-    if (entries.length === 0) {
-      arxivResultsDiv.innerHTML = '<div class="sci-result-card">Keine Treffer gefunden.</div>';
-      return;
+function renderSciLinks() {
+  const query = sciQueryInput.value.trim();
+  sciLinksDiv.innerHTML = '';
+  SCI_SOURCES.forEach(src => {
+    const card = document.createElement('a');
+    card.className = 'sci-result-card const-btn';
+    card.style.display = 'block';
+    card.target = '_blank';
+    card.rel = 'noopener';
+    card.href = query ? src.urlFor(query) : '#';
+    if (!query) {
+      card.onclick = e => e.preventDefault();
+      card.style.opacity = '0.5';
     }
-    entries.forEach(entry => {
-      const title = entry.getElementsByTagName('title')[0]?.textContent.trim() || '(ohne Titel)';
-      const summary = entry.getElementsByTagName('summary')[0]?.textContent.trim().slice(0, 220) || '';
-      const link = entry.getElementsByTagName('id')[0]?.textContent.trim() || '#';
-      const authors = Array.from(entry.getElementsByTagName('author')).map(a => a.getElementsByTagName('name')[0]?.textContent).filter(Boolean).join(', ');
-      const card = document.createElement('div');
-      card.className = 'sci-result-card';
-      card.innerHTML = `<div class="const-sym mono">${title}</div>
-        <div class="const-name">${authors}</div>
-        <div class="const-name">${summary}…</div>
-        <a href="${link}" target="_blank" rel="noopener" class="mono">${link}</a>`;
-      arxivResultsDiv.appendChild(card);
-    });
-  } catch (e) {
-    arxivErrorDiv.style.display = 'block';
-    arxivErrorDiv.textContent = 'Fehler: arXiv-Suche fehlgeschlagen (' + e.message + '). Alternative: direkt auf arxiv.org suchen.';
-    const fallback = document.createElement('div');
-    fallback.className = 'sci-result-card';
-    fallback.innerHTML = `<a href="https://arxiv.org/abs/${encodeURIComponent(query)}" target="_blank" rel="noopener" class="mono">arxiv.org direkt durchsuchen ↗</a>`;
-    arxivResultsDiv.appendChild(fallback);
-  }
+    card.innerHTML = `<span class="const-sym mono">${src.label}</span>`;
+    sciLinksDiv.appendChild(card);
+  });
 }
-document.getElementById('arxivSearchBtn').onclick = searchArxiv;
-arxivQueryInput.addEventListener('keydown', e => { if (e.key === 'Enter') searchArxiv(); });
-
-const wikiQueryInput = document.getElementById('wikiQuery');
-const wikiErrorDiv = document.getElementById('wikiError');
-const wikiResultDiv = document.getElementById('wikiResult');
-
-async function searchWikipedia() {
-  const term = wikiQueryInput.value.trim();
-  wikiErrorDiv.style.display = 'none';
-  wikiResultDiv.innerHTML = '';
-  if (!term) {
-    wikiErrorDiv.style.display = 'block';
-    wikiErrorDiv.textContent = 'Fehler: bitte einen Begriff eingeben';
-    return;
-  }
-  const url = `https://de.wikipedia.org/api/rest_v1/page/summary/${encodeURIComponent(term)}`;
-  try {
-    const res = await fetch(url);
-    if (!res.ok) throw new Error('kein Artikel gefunden (HTTP ' + res.status + ')');
-    const data = await res.json();
-    const card = document.createElement('div');
-    card.className = 'sci-result-card';
-    card.innerHTML = `<div class="const-sym mono">${data.title || term}</div>
-      <div class="const-name">${data.extract || ''}</div>
-      <a href="${data.content_urls?.desktop?.page || ('https://de.wikipedia.org/wiki/' + encodeURIComponent(term))}" target="_blank" rel="noopener" class="mono">vollständigen Artikel öffnen ↗</a>`;
-    wikiResultDiv.appendChild(card);
-  } catch (e) {
-    wikiErrorDiv.style.display = 'block';
-    wikiErrorDiv.textContent = 'Fehler: ' + e.message;
-  }
-}
-document.getElementById('wikiSearchBtn').onclick = searchWikipedia;
-wikiQueryInput.addEventListener('keydown', e => { if (e.key === 'Enter') searchWikipedia(); });
+sciQueryInput.addEventListener('input', renderSciLinks);
 
 // ---------- Quiz & Tägliche Challenge ----------
 const QUIZ_QUESTIONS = [
@@ -1579,6 +1505,7 @@ plot();
 buildParamInputs('pendel');
 renderPeriodicTable();
 renderLearningDay(0);
+renderSciLinks();
 window.addEventListener('resize', () => {
   const activePage = document.querySelector('.app-page.active');
   if (activePage && activePage.id === 'page-formeln') plot();
