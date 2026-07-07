@@ -125,8 +125,8 @@
   .sci-result-card { background:var(--card-bg); border:1px solid var(--border-soft); border-radius:6px; padding:8px 12px; margin-bottom:6px; }
   .sci-result-card a { color:var(--accent-deep); }
   .concept-card { cursor:pointer; }
-  .concept-card .concept-formula, .concept-card .const-name, .concept-card .formula-load-btn, .concept-card .exercise-steps { display:none; }
-  .concept-card.revealed .concept-formula, .concept-card.revealed .const-name { display:block; }
+  .concept-card .concept-formula, .concept-card .const-name, .concept-card .const-val, .concept-card .formula-load-btn, .concept-card .exercise-steps { display:none; }
+  .concept-card.revealed .concept-formula, .concept-card.revealed .const-name, .concept-card.revealed .const-val { display:block; }
   .concept-card.revealed .exercise-steps { display:block; }
   .concept-card.revealed .formula-load-btn { display:inline-block; }
   .concept-card .flip-hint { font-size:10px; color:var(--text-mut); }
@@ -322,16 +322,19 @@ CONSTANTS.forEach(c => SCOPE[c.sym] = c.val);
 
 const constList = document.getElementById('constList');
 CONSTANTS.forEach(c => {
-  const btn = document.createElement('button');
-  btn.className = 'const-btn';
-  btn.innerHTML = `<div class="const-top"><span class="const-sym mono">${c.sym}</span><span class="const-unit mono">${c.unit}</span></div>
-    <div class="const-name">${c.name}</div><div class="const-val mono">${c.val.toExponential(6)}</div>`;
-  btn.onclick = () => {
+  const card = document.createElement('div');
+  card.className = 'const-btn concept-card';
+  card.innerHTML = `<div class="const-top"><span class="const-sym mono">${c.sym}</span><span class="const-unit mono">${c.unit}</span><span class="flip-hint mono">antippen ↴</span></div>
+    <div class="const-name">${c.name}</div><div class="const-val mono">${c.val.toExponential(6)}</div>
+    <button class="btn btn-primary formula-load-btn mono">Symbol einfügen</button>`;
+  card.onclick = () => card.classList.toggle('revealed');
+  card.querySelector('.formula-load-btn').onclick = (e) => {
+    e.stopPropagation();
     const input = document.getElementById('formulaInput');
     input.value = input.value ? input.value + ' ' + c.sym : c.sym;
     input.focus();
   };
-  constList.appendChild(btn);
+  constList.appendChild(card);
 });
 
 // ---------- Formula ----------
