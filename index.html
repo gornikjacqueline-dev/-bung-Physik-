@@ -38,8 +38,6 @@
     --accent:#A79BE8; --accent-deep:#8A79C4; --accent-rgb:167,155,232;
     --error:#FF6B52;
   }
-  :root[data-theme="dark"] .cat-edelgas { background:#8F7BC0; }
-  :root[data-theme="dark"] .cat-actinoid { background:#C08BB5; }
   * { box-sizing: border-box; }
   body { margin:0; background:var(--bg); color:var(--text); font-family:'Inter',sans-serif; padding-bottom:64px; }
   .display { font-family:'Spectral',serif; }
@@ -98,20 +96,20 @@
   .full-panel { background:var(--bg); padding:16px; border-top:1px solid var(--border); }
   .ptable-wrap { overflow-x:auto; margin-top:12px; padding-bottom:8px; }
   .ptable { display:grid; grid-template-columns: repeat(18, 46px); grid-auto-rows: 46px; gap:2px; width:max-content; }
-  .pt-cell { border-radius:4px; padding:3px 4px; cursor:pointer; color:#F8F7FB; display:flex; flex-direction:column; justify-content:space-between; border:none; text-align:left; font-family:inherit; }
+  .pt-cell { border-radius:4px; padding:3px 4px; cursor:pointer; color:#2E2A38; display:flex; flex-direction:column; justify-content:space-between; border:none; text-align:left; font-family:inherit; }
   .pt-cell .pt-num { font-size:8px; opacity:0.85; }
   .pt-cell .pt-sym { font-size:13px; font-weight:600; font-family:'IBM Plex Mono',monospace; }
-  .cat-alkalimetall { background:#B08BD9; }
-  .cat-erdalkalimetall { background:#9C8FD4; }
-  .cat-uebergangsmetall { background:#8B7FC7; }
-  .cat-metall { background:#A79BD1; }
-  .cat-halbmetall { background:#C9A4D0; }
-  .cat-nichtmetall { background:#7FA8C7; }
-  .cat-halogen { background:#D98BB0; }
-  .cat-edelgas { background:#6B5B95; }
-  .cat-lanthanoid { background:#B98BC7; }
-  .cat-actinoid { background:#9B6B95; }
-  .cat-unbekannt { background:#ABA5B8; }
+  .cat-alkalimetall { background:#F5B8B0; }
+  .cat-erdalkalimetall { background:#F5D2A0; }
+  .cat-uebergangsmetall { background:#C4BAE8; }
+  .cat-metall { background:#A8D4EE; }
+  .cat-halbmetall { background:#9FE0D0; }
+  .cat-nichtmetall { background:#B8E8B0; }
+  .cat-halogen { background:#EDE0A0; }
+  .cat-edelgas { background:#B0BCE8; }
+  .cat-lanthanoid { background:#EFB8DC; }
+  .cat-actinoid { background:#E8AEB8; }
+  .cat-unbekannt { background:#D4D0DC; }
   .pt-legend { display:flex; flex-wrap:wrap; gap:10px; font-size:11px; margin-top:10px; color:var(--text-soft); }
   .pt-legend span { display:inline-flex; align-items:center; gap:4px; }
   .pt-legend .dot { width:10px; height:10px; border-radius:3px; }
@@ -123,10 +121,23 @@
   .concept-formula { color:var(--accent-deep); font-size:13px; margin:4px 0; }
   .curve-controls { display:flex; gap:8px; align-items:flex-end; margin-bottom:8px; }
   .curve-controls > div { flex:1; }
-  .sci-tabs { display:flex; gap:8px; margin-bottom:10px; }
-  .sci-tab { flex:1; }
   .sci-result-card { background:var(--card-bg); border:1px solid var(--border-soft); border-radius:6px; padding:8px 12px; margin-bottom:6px; }
   .sci-result-card a { color:var(--accent-deep); }
+  .concept-card { cursor:pointer; }
+  .concept-card .concept-formula, .concept-card .const-name { display:none; }
+  .concept-card.revealed .concept-formula, .concept-card.revealed .const-name { display:block; }
+  .concept-card .flip-hint { font-size:10px; color:var(--text-mut); }
+  .concept-card.revealed .flip-hint { display:none; }
+  .quiz-progress { font-size:11px; color:var(--text-mut); margin-bottom:8px; }
+  .quiz-question { font-size:15px; margin-bottom:12px; }
+  .quiz-option { width:100%; text-align:left; background:var(--card-bg); border:1px solid var(--border-soft); border-radius:6px; padding:10px 12px; margin-bottom:6px; cursor:pointer; color:inherit; font-family:'Inter',sans-serif; font-size:13px; }
+  .quiz-option:hover:not(:disabled) { background:var(--hover-bg); }
+  .quiz-option:disabled { cursor:default; }
+  .quiz-option.correct { background:rgba(var(--accent-rgb),0.25); border-color:var(--accent); color:var(--text); }
+  .quiz-option.incorrect { background:rgba(255,107,82,0.2); border-color:var(--error); color:var(--text); }
+  .quiz-explanation { font-size:12px; color:var(--text-soft); margin:8px 0; line-height:1.5; }
+  .quiz-score { font-size:24px; color:var(--accent); margin:12px 0; }
+  .flame-icon { color:var(--accent); vertical-align:-2px; }
 </style>
 </head>
 <body>
@@ -238,22 +249,24 @@
 <div class="app-page" id="page-wissenschaft">
   <div class="full-panel">
     <h2 class="display">Aktuelle Wissenschaft</h2>
-    <p class="hint mono">echte Live-Suche · keine erfundenen Ergebnisse</p>
-    <div class="sci-tabs">
-      <button class="btn btn-primary sci-tab" id="sciTabArxiv">arXiv-Suche</button>
-      <button class="btn btn-warn sci-tab" id="sciTabWiki">Wikipedia</button>
-    </div>
-    <div id="sciArxivPanel">
-      <input type="text" id="arxivQuery" class="mono" placeholder="z.B. black hole entropy" />
-      <button class="btn btn-primary" id="arxivSearchBtn">arXiv durchsuchen</button>
-      <div class="readout err mono" id="arxivError" style="display:none;"></div>
-      <div id="arxivResults" style="margin-top:8px;"></div>
-    </div>
-    <div id="sciWikiPanel" style="display:none;">
-      <input type="text" id="wikiQuery" class="mono" placeholder="z.B. Photoeffekt" />
-      <button class="btn btn-warn" id="wikiSearchBtn">Wikipedia durchsuchen</button>
-      <div class="readout err mono" id="wikiError" style="display:none;"></div>
-      <div id="wikiResult" style="margin-top:8px;"></div>
+    <p class="hint mono">Suchbegriff eingeben · öffnet die jeweilige Quelle direkt in einem neuen Tab</p>
+    <input type="text" id="sciQuery" class="mono" placeholder="z.B. black hole entropy" />
+    <div id="sciLinks" style="margin-top:8px;"></div>
+  </div>
+</div>
+
+<div class="app-page" id="page-quiz">
+  <div class="full-panel">
+    <h2 class="display">Tägliche Challenge</h2>
+    <p class="hint mono" id="dailyStreakHint"><svg class="flame-icon" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M8.5 14.5A2.5 2.5 0 0 0 11 12c0-1.38-.5-2-1-3-1.072-2.143-.224-4.054 2-6 .5 2.5 2 4.9 4 6.5 2 1.6 3 3.5 3 5.5a7 7 0 1 1-14 0c0-1.153.433-2.294 1-3a2.5 2.5 0 0 0 2.5 2.5z"/></svg> 0 Tage in Folge</p>
+    <div id="dailyChallengeBox"></div>
+  </div>
+
+  <div class="full-panel">
+    <h2 class="display">Quiz</h2>
+    <p class="hint mono">Naturkonstanten, Formeln, Periodensystem &amp; Physik-Konzepte</p>
+    <div id="quizBox">
+      <button class="btn btn-primary" id="quizStartBtn">Quiz starten (10 Fragen)</button>
     </div>
   </div>
 </div>
@@ -273,6 +286,9 @@
   </button>
   <button class="tab-btn" data-page="page-wissenschaft">
     <span class="tab-icon">⌕</span><span>Wissen&shy;schaft</span>
+  </button>
+  <button class="tab-btn" data-page="page-quiz">
+    <span class="tab-icon">?</span><span>Quiz</span>
   </button>
 </nav>
 
@@ -1145,9 +1161,10 @@ function renderLearningDay(dayIndex) {
   d.concepts.forEach(c => {
     const card = document.createElement('div');
     card.className = 'concept-card';
-    card.innerHTML = `<div class="const-top"><span class="const-sym mono">${c.name}</span></div>
+    card.innerHTML = `<div class="const-top"><span class="const-sym mono">${c.name}</span><span class="flip-hint mono">antippen ↴</span></div>
       <div class="concept-formula mono">${c.formula}</div>
       <div class="const-name">${c.meaning}</div>`;
+    card.onclick = () => card.classList.toggle('revealed');
     lernplanConcepts.appendChild(card);
   });
 }
@@ -1204,93 +1221,253 @@ function drawSpacetimeCurvature() {
 document.getElementById('curvatureBtn').onclick = drawSpacetimeCurvature;
 
 // ---------- Aktuelle Wissenschaft ----------
-const sciTabArxiv = document.getElementById('sciTabArxiv');
-const sciTabWiki = document.getElementById('sciTabWiki');
-const sciArxivPanel = document.getElementById('sciArxivPanel');
-const sciWikiPanel = document.getElementById('sciWikiPanel');
-sciTabArxiv.onclick = () => { sciArxivPanel.style.display = 'block'; sciWikiPanel.style.display = 'none'; };
-sciTabWiki.onclick = () => { sciArxivPanel.style.display = 'none'; sciWikiPanel.style.display = 'block'; };
+// Kein Live-Fetch mehr (arXiv-API blockiert CORS in der Praxis) — stattdessen
+// verlässliche direkte Such-Links, die immer funktionieren, da sie nur normale
+// Links sind statt eines Netzwerk-Requests im Browser.
+const SCI_SOURCES = [
+  { label: "Google Scholar", urlFor: q => `https://scholar.google.com/scholar?q=${encodeURIComponent(q)}` },
+  { label: "arXiv", urlFor: q => `https://arxiv.org/search/?query=${encodeURIComponent(q)}&searchtype=all` },
+  { label: "Wikipedia", urlFor: q => `https://de.wikipedia.org/wiki/Spezial:Suche?search=${encodeURIComponent(q)}` },
+];
 
-const arxivQueryInput = document.getElementById('arxivQuery');
-const arxivErrorDiv = document.getElementById('arxivError');
-const arxivResultsDiv = document.getElementById('arxivResults');
+const sciQueryInput = document.getElementById('sciQuery');
+const sciLinksDiv = document.getElementById('sciLinks');
 
-async function searchArxiv() {
-  const query = arxivQueryInput.value.trim();
-  arxivErrorDiv.style.display = 'none';
-  arxivResultsDiv.innerHTML = '';
-  if (!query) {
-    arxivErrorDiv.style.display = 'block';
-    arxivErrorDiv.textContent = 'Fehler: bitte einen Suchbegriff eingeben';
-    return;
-  }
-  const url = `https://export.arxiv.org/api/query?search_query=all:${encodeURIComponent(query)}&max_results=10`;
-  try {
-    const res = await fetch(url);
-    if (!res.ok) throw new Error('HTTP ' + res.status);
-    const text = await res.text();
-    const xml = new DOMParser().parseFromString(text, 'text/xml');
-    const entries = Array.from(xml.getElementsByTagName('entry'));
-    if (entries.length === 0) {
-      arxivResultsDiv.innerHTML = '<div class="sci-result-card">Keine Treffer gefunden.</div>';
-      return;
+function renderSciLinks() {
+  const query = sciQueryInput.value.trim();
+  sciLinksDiv.innerHTML = '';
+  SCI_SOURCES.forEach(src => {
+    const card = document.createElement('a');
+    card.className = 'sci-result-card const-btn';
+    card.style.display = 'block';
+    card.target = '_blank';
+    card.rel = 'noopener';
+    card.href = query ? src.urlFor(query) : '#';
+    if (!query) {
+      card.onclick = e => e.preventDefault();
+      card.style.opacity = '0.5';
     }
-    entries.forEach(entry => {
-      const title = entry.getElementsByTagName('title')[0]?.textContent.trim() || '(ohne Titel)';
-      const summary = entry.getElementsByTagName('summary')[0]?.textContent.trim().slice(0, 220) || '';
-      const link = entry.getElementsByTagName('id')[0]?.textContent.trim() || '#';
-      const authors = Array.from(entry.getElementsByTagName('author')).map(a => a.getElementsByTagName('name')[0]?.textContent).filter(Boolean).join(', ');
-      const card = document.createElement('div');
-      card.className = 'sci-result-card';
-      card.innerHTML = `<div class="const-sym mono">${title}</div>
-        <div class="const-name">${authors}</div>
-        <div class="const-name">${summary}…</div>
-        <a href="${link}" target="_blank" rel="noopener" class="mono">${link}</a>`;
-      arxivResultsDiv.appendChild(card);
-    });
-  } catch (e) {
-    arxivErrorDiv.style.display = 'block';
-    arxivErrorDiv.textContent = 'Fehler: arXiv-Suche fehlgeschlagen (' + e.message + '). Alternative: direkt auf arxiv.org suchen.';
-    const fallback = document.createElement('div');
-    fallback.className = 'sci-result-card';
-    fallback.innerHTML = `<a href="https://arxiv.org/abs/${encodeURIComponent(query)}" target="_blank" rel="noopener" class="mono">arxiv.org direkt durchsuchen ↗</a>`;
-    arxivResultsDiv.appendChild(fallback);
-  }
+    card.innerHTML = `<span class="const-sym mono">${src.label}</span>`;
+    sciLinksDiv.appendChild(card);
+  });
 }
-document.getElementById('arxivSearchBtn').onclick = searchArxiv;
-arxivQueryInput.addEventListener('keydown', e => { if (e.key === 'Enter') searchArxiv(); });
+sciQueryInput.addEventListener('input', renderSciLinks);
 
-const wikiQueryInput = document.getElementById('wikiQuery');
-const wikiErrorDiv = document.getElementById('wikiError');
-const wikiResultDiv = document.getElementById('wikiResult');
+// ---------- Quiz & Tägliche Challenge ----------
+const QUIZ_QUESTIONS = [
+  { question: "Wie groß ist die Lichtgeschwindigkeit im Vakuum (gerundet)?",
+    options: ["2,998 × 10⁸ m/s", "3,998 × 10⁸ m/s", "2,998 × 10⁶ m/s", "9,998 × 10⁸ m/s"],
+    correctIndex: 0, explanation: "c = 299.792.458 m/s ist im SI-System exakt definiert." },
+  { question: "Welches Symbol steht für die Boltzmann-Konstante?",
+    options: ["kB", "h", "NA", "σ"],
+    correctIndex: 0, explanation: "kB verknüpft Temperatur mit Energie auf Teilchenebene." },
+  { question: "Was beschreibt die Feinstrukturkonstante α?",
+    options: ["Stärke der elektromagnetischen Wechselwirkung", "Stärke der Gravitation", "Zerfallsrate radioaktiver Kerne", "Lichtgeschwindigkeit im Medium"],
+    correctIndex: 0, explanation: "α ≈ 1/137 ist eine dimensionslose Kopplungskonstante der Quantenelektrodynamik." },
+  { question: "Welche Einheit hat die Gravitationskonstante G?",
+    options: ["m³/(kg·s²)", "J/K", "C", "1/mol"],
+    correctIndex: 0, explanation: "Diese Einheit ergibt sich aus F = Gm₁m₂/r²." },
+  { question: "Welche Formel beschreibt die kinetische Energie?",
+    options: ["E = ½mv²", "E = mc²", "E = hf", "E = mgh"],
+    correctIndex: 0, explanation: "E = ½mv² ist die klassische Bewegungsenergie." },
+  { question: "Wofür steht die Formel E = mc²?",
+    options: ["Masse-Energie-Äquivalenz (Einstein, SRT)", "Photonenenergie (Planck)", "Kinetische Energie (Newton)", "Gravitationspotential"],
+    correctIndex: 0, explanation: "Masse und Energie sind nach der Speziellen Relativitätstheorie äquivalent." },
+  { question: "Wie lautet das Coulomb-Gesetz für die Kraft zwischen zwei Ladungen?",
+    options: ["F = q₁q₂/(4πε₀r²)", "F = Gm₁m₂/r²", "F = qvB", "F = ma"],
+    correctIndex: 0, explanation: "Das Coulomb-Gesetz beschreibt die Kraft zwischen zwei Punktladungen." },
+  { question: "Welche Formel gehört zum idealen Gasgesetz?",
+    options: ["pV = nRT", "E = ½kx²", "F = ma", "λ = h/(mv)"],
+    correctIndex: 0, explanation: "pV = nRT verknüpft Druck, Volumen, Stoffmenge und Temperatur." },
+  { question: "Was besagt der Lorentzfaktor γ = 1/√(1−v²/c²)?",
+    options: ["Wie stark Zeit/Länge bei hohen Geschwindigkeiten relativistisch verzerrt werden", "Das Verhältnis von Masse zu Energie", "Die Wellenlänge eines Photons", "Den Wirkungsgrad einer Wärmekraftmaschine"],
+    correctIndex: 0, explanation: "γ bestimmt Zeitdilatation, Längenkontraktion und relativistischen Impuls." },
+  { question: "Wie lautet das 3. Keplersche Gesetz sinngemäß?",
+    options: ["Das Quadrat der Umlaufzeit ist proportional zur dritten Potenz der großen Halbachse", "Die überstrichene Fläche pro Zeit ist konstant", "Planetenbahnen sind exakte Kreise", "Die Umlaufzeit ist proportional zur Sonnenmasse"],
+    correctIndex: 0, explanation: "T² ∝ a³ — daraus folgt z.B. die Erdumlaufzeit von rund einem Jahr." },
+  { question: "Welches chemische Element hat die Ordnungszahl 1?",
+    options: ["Wasserstoff (H)", "Helium (He)", "Lithium (Li)", "Kohlenstoff (C)"],
+    correctIndex: 0, explanation: "Wasserstoff hat ein Proton im Kern und steht daher an Position 1." },
+  { question: "Zu welcher Kategorie gehören Elemente wie Helium und Neon?",
+    options: ["Edelgase", "Alkalimetalle", "Halogene", "Übergangsmetalle"],
+    correctIndex: 0, explanation: "Edelgase haben volle Elektronenschalen und reagieren kaum." },
+  { question: "Welches Element hat das Symbol 'Fe'?",
+    options: ["Eisen", "Fluor", "Francium", "Fermium"],
+    correctIndex: 0, explanation: "Fe kommt vom lateinischen 'ferrum' für Eisen." },
+  { question: "Wie viele Elemente umfasst das aktuelle Periodensystem (Stand Ordnungszahl 118)?",
+    options: ["118", "92", "103", "150"],
+    correctIndex: 0, explanation: "Von Wasserstoff (Z=1) bis Oganesson (Z=118)." },
+  { question: "Zu welcher Elementkategorie gehört Uran?",
+    options: ["Actinoid", "Lanthanoid", "Übergangsmetall", "Alkalimetall"],
+    correctIndex: 0, explanation: "Uran (Z=92) gehört zur Actinoiden-Reihe." },
+  { question: "Was besagt die Heisenbergsche Unschärferelation sinngemäß?",
+    options: ["Ort und Impuls eines Teilchens können nicht gleichzeitig beliebig genau bekannt sein", "Energie kann nicht erzeugt oder vernichtet werden", "Licht verhält sich immer wie eine Welle", "Masse und Energie sind äquivalent"],
+    correctIndex: 0, explanation: "Ein Grundprinzip der Quantenmechanik: Δx·Δp ≥ ħ/2." },
+  { question: "Was beschreibt der Schwarzschild-Radius eines Schwarzen Lochs?",
+    options: ["Den Radius, innerhalb dessen nicht einmal Licht entkommen kann", "Den Radius der Photonensphäre", "Den Radius des Ereignishorizonts eines weißen Zwergs", "Den Umfang der Akkretionsscheibe"],
+    correctIndex: 0, explanation: "Der Schwarzschild-Radius definiert den Ereignishorizont eines nicht-rotierenden Schwarzen Lochs." },
+  { question: "Wodurch entsteht Hawking-Strahlung (theoretisch)?",
+    options: ["Quanteneffekte nahe des Ereignishorizonts eines Schwarzen Lochs", "Kernfusion im Inneren eines Sterns", "Beschleunigung geladener Teilchen im Magnetfeld", "Radioaktiver Zerfall instabiler Kerne"],
+    correctIndex: 0, explanation: "Hawking sagte 1975 diese Strahlung aus Quantenfeldtheorie auf gekrümmter Raumzeit voraus." },
+  { question: "Was ist das Hauptmerkmal der Poisson-Statistik bei radioaktivem Zerfall?",
+    options: ["Der Fehler einer Zählung ist ungefähr √N", "Der Fehler ist immer konstant, unabhängig von N", "Es gibt keinen messbaren Fehler", "Der Fehler nimmt mit der Zeit ab"],
+    correctIndex: 0, explanation: "Zählprozesse folgen der Poisson-Verteilung — Standardphysik der Teilchenzählstatistik." },
+  { question: "Was zeigt das Doppelspalt-Experiment?",
+    options: ["Wellen-Teilchen-Dualismus von Licht/Materie", "Dass Licht sich nur wie ein Teilchen verhält", "Die Existenz von Schwarzen Löchern", "Die Ausdehnung des Universums"],
+    correctIndex: 0, explanation: "Interferenzmuster zeigen Wellenverhalten, einzelne Treffer zeigen Teilchenverhalten." },
+  { question: "Wonach ist die Planck-Länge definiert?",
+    options: ["Die Skala, ab der Quanteneffekte der Raumzeit erwartet werden", "Die Wellenlänge sichtbaren Lichts", "Der Durchmesser eines Wasserstoffatoms", "Die Reichweite der starken Kernkraft"],
+    correctIndex: 0, explanation: "lP = √(ħG/c³) — jenseits dieser Skala versagt die klassische Raumzeit-Beschreibung." },
+  { question: "Was besagt das Hubble-Gesetz?",
+    options: ["Weiter entfernte Galaxien entfernen sich schneller von uns", "Sterne mit mehr Masse leben länger", "Licht wird von Materie immer abgelenkt", "Die Temperatur des Universums steigt mit der Zeit"],
+    correctIndex: 0, explanation: "v = H₀d — Grundlage für das expandierende Universum." },
+  { question: "Welche Aussage zur Loop-Quantengravitation (LQG) ist korrekt?",
+    options: ["Sie ist eine unbestätigte Kandidatentheorie der Quantengravitation", "Sie ist experimentell vollständig bestätigt", "Sie ersetzt die Allgemeine Relativitätstheorie vollständig", "Sie wurde von Einstein entwickelt"],
+    correctIndex: 0, explanation: "LQG sagt diskrete Flächenspektren voraus, ist aber bislang nicht experimentell bestätigt." },
+];
 
-async function searchWikipedia() {
-  const term = wikiQueryInput.value.trim();
-  wikiErrorDiv.style.display = 'none';
-  wikiResultDiv.innerHTML = '';
-  if (!term) {
-    wikiErrorDiv.style.display = 'block';
-    wikiErrorDiv.textContent = 'Fehler: bitte einen Begriff eingeben';
+function shuffleArray(arr) {
+  const a = arr.slice();
+  for (let i = a.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [a[i], a[j]] = [a[j], a[i]];
+  }
+  return a;
+}
+
+const quizBox = document.getElementById('quizBox');
+const quizStartBtn = document.getElementById('quizStartBtn');
+let quizState = null;
+
+function startQuiz() {
+  quizState = { questions: shuffleArray(QUIZ_QUESTIONS).slice(0, 10), index: 0, score: 0 };
+  renderQuizQuestion();
+}
+quizStartBtn.onclick = startQuiz;
+
+function renderQuizQuestion() {
+  const q = quizState.questions[quizState.index];
+  const optionOrder = shuffleArray(q.options.map((opt, i) => ({ opt, i })));
+  quizBox.innerHTML = `
+    <div class="quiz-progress mono">Frage ${quizState.index + 1} von ${quizState.questions.length} · Punkte: ${quizState.score}</div>
+    <div class="quiz-question">${q.question}</div>
+    <div id="quizOptions"></div>
+  `;
+  const optionsDiv = document.getElementById('quizOptions');
+  optionOrder.forEach(({ opt, i }) => {
+    const btn = document.createElement('button');
+    btn.className = 'quiz-option mono';
+    btn.textContent = opt;
+    btn.onclick = () => answerQuiz(i, btn);
+    optionsDiv.appendChild(btn);
+  });
+}
+
+function answerQuiz(selectedIndex, btnEl) {
+  const q = quizState.questions[quizState.index];
+  const correct = selectedIndex === q.correctIndex;
+  if (correct) quizState.score++;
+  document.querySelectorAll('.quiz-option').forEach(b => b.disabled = true);
+  btnEl.classList.add(correct ? 'correct' : 'incorrect');
+  if (!correct) {
+    const correctBtn = Array.from(document.querySelectorAll('.quiz-option')).find(b => b.textContent === q.options[q.correctIndex]);
+    if (correctBtn) correctBtn.classList.add('correct');
+  }
+  const explDiv = document.createElement('div');
+  explDiv.className = 'quiz-explanation';
+  explDiv.textContent = q.explanation;
+  document.getElementById('quizOptions').appendChild(explDiv);
+
+  const nextBtn = document.createElement('button');
+  nextBtn.className = 'btn btn-primary';
+  nextBtn.textContent = quizState.index + 1 < quizState.questions.length ? 'Nächste Frage' : 'Ergebnis anzeigen';
+  nextBtn.onclick = () => {
+    quizState.index++;
+    if (quizState.index < quizState.questions.length) renderQuizQuestion();
+    else showQuizResult();
+  };
+  document.getElementById('quizOptions').appendChild(nextBtn);
+}
+
+function showQuizResult() {
+  quizBox.innerHTML = `
+    <div class="quiz-score mono">${quizState.score} von ${quizState.questions.length} richtig</div>
+    <button class="btn btn-primary" id="quizRestartBtn">Neu starten</button>
+  `;
+  document.getElementById('quizRestartBtn').onclick = startQuiz;
+}
+
+// ---------- Tägliche Challenge ----------
+const dailyStreakHint = document.getElementById('dailyStreakHint');
+const dailyChallengeBox = document.getElementById('dailyChallengeBox');
+
+function todayKey() {
+  return new Date().toISOString().slice(0, 10);
+}
+function yesterdayKey() {
+  const d = new Date();
+  d.setUTCDate(d.getUTCDate() - 1);
+  return d.toISOString().slice(0, 10);
+}
+function getStreak() {
+  return parseInt(localStorage.getItem('physlab-streak-count') || '0', 10);
+}
+function getLastDate() {
+  return localStorage.getItem('physlab-streak-lastdate') || '';
+}
+function updateStreak() {
+  const last = getLastDate();
+  let streak = getStreak();
+  if (last === todayKey()) {
+    // already done today, no change
+  } else if (last === yesterdayKey()) {
+    streak++;
+  } else {
+    streak = 1;
+  }
+  localStorage.setItem('physlab-streak-count', String(streak));
+  localStorage.setItem('physlab-streak-lastdate', todayKey());
+  dailyStreakHint.innerHTML = `<svg class="flame-icon" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M8.5 14.5A2.5 2.5 0 0 0 11 12c0-1.38-.5-2-1-3-1.072-2.143-.224-4.054 2-6 .5 2.5 2 4.9 4 6.5 2 1.6 3 3.5 3 5.5a7 7 0 1 1-14 0c0-1.153.433-2.294 1-3a2.5 2.5 0 0 0 2.5 2.5z"/></svg> ${streak} Tag${streak === 1 ? '' : 'e'} in Folge`;
+}
+
+function renderDailyChallenge() {
+  dailyStreakHint.innerHTML = `<svg class="flame-icon" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M8.5 14.5A2.5 2.5 0 0 0 11 12c0-1.38-.5-2-1-3-1.072-2.143-.224-4.054 2-6 .5 2.5 2 4.9 4 6.5 2 1.6 3 3.5 3 5.5a7 7 0 1 1-14 0c0-1.153.433-2.294 1-3a2.5 2.5 0 0 0 2.5 2.5z"/></svg> ${getStreak()} Tag${getStreak() === 1 ? '' : 'e'} in Folge`;
+  const dayIndex = Math.floor(Date.now() / 86400000) % QUIZ_QUESTIONS.length;
+  const q = QUIZ_QUESTIONS[dayIndex];
+  const doneToday = getLastDate() === todayKey();
+
+  if (doneToday) {
+    dailyChallengeBox.innerHTML = `<div class="quiz-question">${q.question}</div>
+      <div class="quiz-explanation">✓ Heute schon erledigt — richtige Antwort: <b>${q.options[q.correctIndex]}</b></div>`;
     return;
   }
-  const url = `https://de.wikipedia.org/api/rest_v1/page/summary/${encodeURIComponent(term)}`;
-  try {
-    const res = await fetch(url);
-    if (!res.ok) throw new Error('kein Artikel gefunden (HTTP ' + res.status + ')');
-    const data = await res.json();
-    const card = document.createElement('div');
-    card.className = 'sci-result-card';
-    card.innerHTML = `<div class="const-sym mono">${data.title || term}</div>
-      <div class="const-name">${data.extract || ''}</div>
-      <a href="${data.content_urls?.desktop?.page || ('https://de.wikipedia.org/wiki/' + encodeURIComponent(term))}" target="_blank" rel="noopener" class="mono">vollständigen Artikel öffnen ↗</a>`;
-    wikiResultDiv.appendChild(card);
-  } catch (e) {
-    wikiErrorDiv.style.display = 'block';
-    wikiErrorDiv.textContent = 'Fehler: ' + e.message;
-  }
+
+  dailyChallengeBox.innerHTML = `<div class="quiz-question">${q.question}</div><div id="dailyOptions"></div>`;
+  const optionsDiv = document.getElementById('dailyOptions');
+  const optionOrder = shuffleArray(q.options.map((opt, i) => ({ opt, i })));
+  optionOrder.forEach(({ opt, i }) => {
+    const btn = document.createElement('button');
+    btn.className = 'quiz-option mono';
+    btn.textContent = opt;
+    btn.onclick = () => answerDailyChallenge(i, btn, q);
+    optionsDiv.appendChild(btn);
+  });
 }
-document.getElementById('wikiSearchBtn').onclick = searchWikipedia;
-wikiQueryInput.addEventListener('keydown', e => { if (e.key === 'Enter') searchWikipedia(); });
+
+function answerDailyChallenge(selectedIndex, btnEl, q) {
+  const correct = selectedIndex === q.correctIndex;
+  document.querySelectorAll('#dailyOptions .quiz-option').forEach(b => b.disabled = true);
+  btnEl.classList.add(correct ? 'correct' : 'incorrect');
+  if (!correct) {
+    const correctBtn = Array.from(document.querySelectorAll('#dailyOptions .quiz-option')).find(b => b.textContent === q.options[q.correctIndex]);
+    if (correctBtn) correctBtn.classList.add('correct');
+  }
+  const explDiv = document.createElement('div');
+  explDiv.className = 'quiz-explanation';
+  explDiv.textContent = q.explanation;
+  document.getElementById('dailyOptions').appendChild(explDiv);
+  updateStreak();
+}
 
 // ---------- Tab navigation ----------
 const tabbar = document.getElementById('tabbar');
@@ -1300,6 +1477,7 @@ function showPage(pageId) {
   // canvases need a redraw once their page becomes visible (fitCanvas reads clientWidth, which is 0 while hidden)
   if (pageId === 'page-formeln') plot();
   if (pageId === 'page-lernplan') drawSpacetimeCurvature();
+  if (pageId === 'page-quiz') renderDailyChallenge();
 }
 tabbar.querySelectorAll('.tab-btn').forEach(btn => {
   btn.onclick = () => showPage(btn.dataset.page);
@@ -1328,6 +1506,7 @@ plot();
 buildParamInputs('pendel');
 renderPeriodicTable();
 renderLearningDay(0);
+renderSciLinks();
 window.addEventListener('resize', () => {
   const activePage = document.querySelector('.app-page.active');
   if (activePage && activePage.id === 'page-formeln') plot();
